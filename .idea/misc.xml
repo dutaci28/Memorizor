@@ -8,7 +8,12 @@
         <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.24166666666666667" />
         <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/activity_post.xml" value="0.1" />
         <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/activity_register.xml" value="0.1" />
+        <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/fragment_account.xml" value="0.1" />
+        <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/fragment_bookmarks.xml" value="0.1" />
+        <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/layout/fragment_search.xml" value="0.1" />
         <entry key="..\:/Users/dutac/Desktop/Memorizor/app/src/main/res/menu/bottom_menu.xml" value="0.1" />
       </map>
     </option>
