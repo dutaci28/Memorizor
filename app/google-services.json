@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "485529548472",
+    "project_id": "memorizor-3c813",
+    "storage_bucket": "memorizor-3c813.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485529548472:android:31102893e46cd87e3f664d",
+        "android_client_info": {
+          "package_name": "com.example.memorizor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485529548472-74dgq36elf8nhtg2n89scrn3nnr8ijcl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5LVMFitTmL4fP0-Il-ubtYoKnH33sMI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485529548472-74dgq36elf8nhtg2n89scrn3nnr8ijcl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
