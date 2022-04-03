@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(final String username, final String name, final String email, String password) {
 
-        pd.setMessage("Please Wait!");
+        pd.setMessage("Please Wait");
         pd.show();
 
         mAuth.createUserWithEmailAndPassword(email , password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -97,16 +97,13 @@ public class RegisterActivity extends AppCompatActivity {
                 map.put("email", email);
                 map.put("username" , username);
                 map.put("id" , mAuth.getCurrentUser().getUid());
-                map.put("bio" , "");
-                map.put("imageurl" , "default");
 
                 mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
+
                             pd.dismiss();
-                            Toast.makeText(RegisterActivity.this, "Update the profile " +
-                                    "for better expereince", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisterActivity.this , MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);

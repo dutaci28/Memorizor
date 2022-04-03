@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
                         selectorFragment = new SearchFragment();
                         break;
 
-//                    case R.id.nav_add :
-//                        selectorFragment = null;
-//                        startActivity(new Intent(MainActivity.this , PostActivity.class));
-//                        break;
+                    case R.id.nav_add :
+                        selectorFragment = null;
+                        startActivity(new Intent(MainActivity.this , AddActivity.class));
+                        break;
 
                     case R.id.nav_bookmarks:
                         selectorFragment = new BookmarksFragment();
