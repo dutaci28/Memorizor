@@ -25,6 +25,14 @@
         tools:layout_editor_absoluteX="16dp" />
 
     <EditText
+        android:id="@+id/etPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price"
+        app:layout_constraintTop_toBottomOf="@+id/etDescription"
+        tools:layout_editor_absoluteX="-16dp" />
+
+    <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +47,7 @@
         android:layout_marginStart="128dp"
         android:text="Upload Videos"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/etPrice" />
 
     <Button
         android:id="@+id/btnUpload"

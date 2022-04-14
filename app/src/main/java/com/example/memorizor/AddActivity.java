@@ -38,6 +38,7 @@ public class AddActivity extends AppCompatActivity {
     private ImageView image;
     private EditText title;
     private EditText description;
+    private EditText price;
     private Button add;
     private Button upload;
 
@@ -56,6 +57,7 @@ public class AddActivity extends AppCompatActivity {
         image = findViewById(R.id.image);
         title = findViewById(R.id.etTitle);
         description = findViewById(R.id.etDescription);
+        price = findViewById(R.id.etPrice);
         add = findViewById(R.id.btnAdd);
         upload = findViewById(R.id.btnUpload);
 
@@ -79,7 +81,7 @@ public class AddActivity extends AppCompatActivity {
         pd.setMessage("Uploading");
         pd.show();
         if (imageUri != null) {
-            StorageReference filePth = FirebaseStorage.getInstance().getReference("Courses").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            StorageReference filePth = FirebaseStorage.getInstance().getReference("CourseImages").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
             StorageTask uploadTask = filePth.putFile(imageUri);
             uploadTask.continueWithTask(new Continuation() {
                 @Override
@@ -102,6 +104,7 @@ public class AddActivity extends AppCompatActivity {
                     map.put("imageUrl", imageUrl);
                     map.put("title", title.getText().toString());
                     map.put("description", description.getText().toString());
+                    map.put("price",price.getText().toString());
                     map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     ref.child(courseId).setValue(map);
