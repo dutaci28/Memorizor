@@ -23,7 +23,7 @@
                 android:src="@drawable/ic_baseline_search_24" />
 
             <EditText
-                android:id="@+id/search_bar"
+                android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -36,7 +36,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_users"
+        android:id="@+id/rv_courses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/bar" />
