@@ -15,6 +15,11 @@ import com.example.memorizor.Model.Course;
 import com.example.memorizor.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,6 +29,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private Context mContext;
     private List<Course> mCourses;
     private boolean isFragment;
+
+    private Button btn_buy;
 
     private FirebaseUser firebaseUser;
 
@@ -51,8 +58,19 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
-        //isBought(course.getId(),holder.butonCuPret?)
-        //face la search fragment
+        isPurchased(course.getCourseId() , holder.btn_buy);
+
+        holder.btn_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.btn_buy.getText().toString().equals("Buy Course")){
+                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child(course.getCourseId()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child(course.getCourseId()).removeValue();
+
+                }
+            }
+        });
 
     }
 
@@ -61,6 +79,25 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         return mCourses.size();
     }
 
+    private void isPurchased(final String id, final Button btn_buy) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(id).exists())
+                    btn_buy.setText("Refund Course");
+                else
+                    btn_buy.setText("Buy Course");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -68,7 +105,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public TextView description;
         public TextView price;
         public ImageView image;
-        public Button details;
+        public Button btn_buy;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +114,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price);
+            btn_buy = itemView.findViewById(R.id.btn_buy);
         }
     }
 

@@ -81,12 +81,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/details"
+        android:id="@+id/btn_buy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="136dp"
-        android:text="Get Details"
+        android:text="Buy Course"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -98,7 +98,7 @@
         android:layout_marginTop="148dp"
         android:maxWidth="200dp"
         android:text="$20.00"
-        app:layout_constraintStart_toEndOf="@+id/details"
+        app:layout_constraintStart_toEndOf="@+id/btn_buy"
         app:layout_constraintTop_toTopOf="parent" />
 
 
