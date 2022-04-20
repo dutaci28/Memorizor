@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +30,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private Context mContext;
     private List<Course> mCourses;
     private boolean isFragment;
-
-    private Button btn_buy;
 
     private FirebaseUser firebaseUser;
 
@@ -59,6 +58,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
         isPurchased(course.getCourseId() , holder.btn_buy);
+        isBookmarked(course.getCourseId(), holder.btn_bookmark);
 
         holder.btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +72,17 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             }
         });
 
+        holder.btn_bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if((Boolean)holder.btn_bookmark.getTag()){
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child(course.getCourseId()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child(course.getCourseId()).removeValue();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -80,7 +91,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     }
 
     private void isPurchased(final String id, final Button btn_buy) {
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,22 +100,42 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 else
                     btn_buy.setText("Buy Course");
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    private void isBookmarked(final String id, final ImageButton btn_bookmark) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(id).exists()) {
+                    btn_bookmark.setTag(false);
+                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_remove_24);
+                }
+                else {
+                    btn_bookmark.setTag(true);
+                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         public TextView description;
         public TextView price;
         public ImageView image;
         public Button btn_buy;
+        public ImageButton btn_bookmark;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +145,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price);
             btn_buy = itemView.findViewById(R.id.btn_buy);
+            btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
         }
     }
 
