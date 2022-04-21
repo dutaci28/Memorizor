@@ -51,7 +51,7 @@ public class SearchFragment extends Fragment {
 
         et_search = view.findViewById(R.id.et_search);
 
-        readUsers();
+        readCourses();
 
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -73,7 +73,7 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    private void readUsers() {
+    private void readCourses() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
