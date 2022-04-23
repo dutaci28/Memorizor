@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Model.Course;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class BookmarksFragment extends Fragment {
 
+    private TextView tv_empty;
     private RecyclerView rv_courses_bookmarked;
     private List<Course> mCourses;
     private CourseAdapter courseAdapter;
@@ -42,15 +44,17 @@ public class BookmarksFragment extends Fragment {
         rv_courses_bookmarked = view.findViewById(R.id.rv_courses_bookmarked);
         rv_courses_bookmarked.setHasFixedSize(true);
         rv_courses_bookmarked.setLayoutManager(new LinearLayoutManager(getContext()));
+        tv_empty = view.findViewById(R.id.tv_empty);
 
         mCourses = new ArrayList<>();
         courseAdapter = new CourseAdapter(getContext(), mCourses, true);
         rv_courses_bookmarked.setAdapter(courseAdapter);
 
         populateBookmarkedCourses();
-//        readBookmarkedCourses();
         return view;
     }
+
+
 
     private void populateBookmarkedCourses(){
         FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Bookmarked").addValueEventListener(new ValueEventListener() {
@@ -63,12 +67,10 @@ public class BookmarksFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -81,11 +83,13 @@ public class BookmarksFragment extends Fragment {
                         }
                     }
                 }
+                if(mCourses.size()!=0){
+                    tv_empty.setText("");
+                }
                 courseAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

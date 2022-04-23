@@ -51,6 +51,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Course course = mCourses.get(position);
 
+
         holder.title.setText(course.getTitle());
         holder.description.setText(course.getDescription());
         holder.price.setText("$" + course.getPrice());
@@ -95,10 +96,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists())
+                if (dataSnapshot.child(id).exists()) {
                     btn_buy.setText("Refund Course");
-                else
+                }
+                else {
                     btn_buy.setText("Buy Course");
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

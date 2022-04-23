@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,7 +17,9 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,16 +39,21 @@ import java.util.HashMap;
 public class AddActivity extends AppCompatActivity {
 
     private ImageView image;
+    private VideoView video;
     private EditText title;
     private EditText description;
     private EditText price;
-    private Button add;
     private Button upload;
+    private Button btn_pick_video;
 
     private Uri imageUri;
     private String imageUrl;
 
-    public static final int GET_FROM_GALLERY = 3;
+    private Uri videoUri;
+    private String videoUrl;
+
+    public static final int GET_IMAGE_FROM_GALLERY = 2;
+    public static final int GET_VIDEO_FROM_GALLERY = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +63,24 @@ public class AddActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         image = findViewById(R.id.image);
+        video = findViewById(R.id.video_view);
         title = findViewById(R.id.etTitle);
         description = findViewById(R.id.etDescription);
         price = findViewById(R.id.etPrice);
-        add = findViewById(R.id.btnAdd);
         upload = findViewById(R.id.btnUpload);
+        btn_pick_video = findViewById(R.id.btn_pick_video);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_IMAGE_FROM_GALLERY);
+            }
+        });
+
+        btn_pick_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI), GET_VIDEO_FROM_GALLERY);
             }
         });
 
@@ -74,6 +90,32 @@ public class AddActivity extends AppCompatActivity {
                 uploadImage();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GET_IMAGE_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            imageUri = selectedImage;
+            image.setImageURI(imageUri);
+        }
+        if (requestCode == GET_VIDEO_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedVideo = data.getData();
+            videoUri = selectedVideo;
+
+            MediaController mediaController = new MediaController(this);
+            mediaController.setAnchorView(video);
+            video.setMediaController(mediaController);
+            video.setVideoURI(videoUri);
+            video.requestFocus();
+            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    video.pause();
+                }
+            });
+        }
     }
 
     private void uploadImage() {
@@ -124,19 +166,10 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-
     private String getFileExtension(Uri uri) {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(this.getContentResolver().getType(uri));
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            imageUri = selectedImage;
-            image.setImageURI(imageUri);
-        }
-    }
+
 
 }
