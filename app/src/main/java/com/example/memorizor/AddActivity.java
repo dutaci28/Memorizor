@@ -127,7 +127,7 @@ public class AddActivity extends AppCompatActivity {
         pd.setMessage("Uploading");
         pd.show();
         if (imageUri != null) {
-            StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(title.getText().toString()+ System.currentTimeMillis() + "." + getFileExtension(imageUri));
             imagePath.putFile(imageUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
@@ -158,16 +158,16 @@ public class AddActivity extends AppCompatActivity {
             Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
         }
 
-        //for each videoUri in lista
-        if (videoUri != null) {
-            StorageReference filePthVid = FirebaseStorage.getInstance().getReference("CourseVideos").child(System.currentTimeMillis() + "." + getFileExtension(videoUri));
-            filePthVid.putFile(videoUri).continueWithTask(new Continuation() {
+        for(int i=0;i<mVideoUploadUris.size();i++){
+            int index = i;
+            StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(videoUri));
+            videoPath.putFile(videoUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-                    return filePthVid.getDownloadUrl();
+                    return videoPath.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
@@ -175,10 +175,12 @@ public class AddActivity extends AppCompatActivity {
                     String videoUrl = task.getResult().toString();
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
+
                     String videoId = ref.push().getKey();
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("videoId", videoId);
                     map.put("videoUrl", videoUrl);
+                    map.put("videoIndex", index);
                     map.put("hostCourseId", courseId);
                     //map.put("title", title.getText().toString());
 
@@ -189,9 +191,42 @@ public class AddActivity extends AppCompatActivity {
                     finish();
                 }
             });
-        } else {
-            Toast.makeText(this, "No video was selected!", Toast.LENGTH_SHORT).show();
         }
+
+//        if (videoUri != null) {
+//            StorageReference filePthVid = FirebaseStorage.getInstance().getReference("CourseVideos").child(System.currentTimeMillis() + "." + getFileExtension(videoUri));
+//            filePthVid.putFile(videoUri).continueWithTask(new Continuation() {
+//                @Override
+//                public Object then(@NonNull Task task) throws Exception {
+//                    if (!task.isSuccessful()) {
+//                        throw task.getException();
+//                    }
+//                    return filePthVid.getDownloadUrl();
+//                }
+//            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Uri> task) {
+//                    String videoUrl = task.getResult().toString();
+//
+//                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
+//                    String videoId = ref.push().getKey();
+//                    HashMap<String, Object> map = new HashMap<>();
+//                    map.put("videoId", videoId);
+//                    map.put("videoUrl", videoUrl);
+//                    map.put("hostCourseId", courseId);
+//                    //map.put("title", title.getText().toString());
+//
+//                    ref.child(videoId).setValue(map);
+//
+//                    pd.dismiss();
+//                    startActivity(new Intent(AddActivity.this, MainActivity.class));
+//                    finish();
+//                }
+//            });
+//        } else {
+//            Toast.makeText(this, "No video was selected!", Toast.LENGTH_SHORT).show();
+//        }
+
     }
 
     private String getFileExtension(Uri uri) {
