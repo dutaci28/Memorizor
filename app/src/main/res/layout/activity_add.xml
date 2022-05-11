@@ -49,33 +49,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/etTitle"
                 tools:layout_editor_absoluteX="-5dp" />
 
-            <VideoView
-                android:id="@+id/video_view"
-                android:layout_width="410dp"
-                android:layout_height="198dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etPrice" />
-
             <Button
                 android:id="@+id/btn_pick_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="145dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginStart="144dp"
                 android:text="Pick Video"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/video_view" />
+                app:layout_constraintTop_toBottomOf="@+id/rv_videos_upload" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_videos_upload"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="@+id/btnUpload"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etPrice"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="124dp"
-                android:layout_marginTop="328dp"
+                android:layout_marginTop="24dp"
                 android:text="Upload Course"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etPrice" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_pick_video" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

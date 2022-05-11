@@ -2,6 +2,8 @@ package com.example.memorizor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -21,6 +23,8 @@ import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.memorizor.Adapter.CourseAdapter;
+import com.example.memorizor.Adapter.VideoUploadAdapter;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +38,9 @@ import com.google.firebase.storage.StorageTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -43,14 +49,15 @@ public class AddActivity extends AppCompatActivity {
     private EditText title;
     private EditText description;
     private EditText price;
+    private RecyclerView rv_videos_upload;
     private Button upload;
     private Button btn_pick_video;
 
     private Uri imageUri;
-    private String imageUrl;
-
     private Uri videoUri;
-    private String videoUrl;
+
+    private List<Uri> mVideoUploadUris = new ArrayList<>();
+    private VideoUploadAdapter videoUploadAdapter;
 
     private String courseId;
 
@@ -69,6 +76,7 @@ public class AddActivity extends AppCompatActivity {
         title = findViewById(R.id.etTitle);
         description = findViewById(R.id.etDescription);
         price = findViewById(R.id.etPrice);
+        rv_videos_upload = findViewById(R.id.rv_videos_upload);
         upload = findViewById(R.id.btnUpload);
         btn_pick_video = findViewById(R.id.btn_pick_video);
 
@@ -78,6 +86,11 @@ public class AddActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_IMAGE_FROM_GALLERY);
             }
         });
+
+        rv_videos_upload.setHasFixedSize(true);
+        rv_videos_upload.setLayoutManager(new LinearLayoutManager(this));
+        videoUploadAdapter = new VideoUploadAdapter(this, mVideoUploadUris);
+        rv_videos_upload.setAdapter(videoUploadAdapter);
 
         btn_pick_video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,25 +111,14 @@ public class AddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_IMAGE_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            imageUri = selectedImage;
+            imageUri = data.getData();
             image.setImageURI(imageUri);
         }
         if (requestCode == GET_VIDEO_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedVideo = data.getData();
-            videoUri = selectedVideo;
+            videoUri = data.getData();
+            mVideoUploadUris.add(videoUri);
 
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(video);
-            video.setMediaController(mediaController);
-            video.setVideoURI(videoUri);
-            video.requestFocus();
-            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    video.pause();
-                }
-            });
+            videoUploadAdapter.notifyDataSetChanged();
         }
     }
 
@@ -125,21 +127,19 @@ public class AddActivity extends AppCompatActivity {
         pd.setMessage("Uploading");
         pd.show();
         if (imageUri != null) {
-            StorageReference filePthImg = FirebaseStorage.getInstance().getReference("CourseImages").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-            StorageTask uploadTask = filePthImg.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation() {
+            StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            imagePath.putFile(imageUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-                    return filePthImg.getDownloadUrl();
+                    return imagePath.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    Uri downloadUri = task.getResult();
-                    imageUrl = downloadUri.toString();
+                    String imageUrl = task.getResult().toString();
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Courses");
                     courseId = ref.push().getKey();
@@ -148,24 +148,20 @@ public class AddActivity extends AppCompatActivity {
                     map.put("imageUrl", imageUrl);
                     map.put("title", title.getText().toString());
                     map.put("description", description.getText().toString());
-                    map.put("price",price.getText().toString());
+                    map.put("price", price.getText().toString());
                     map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     ref.child(courseId).setValue(map);
-
-//                    pd.dismiss();
-//                    startActivity(new Intent(AddActivity.this, MainActivity.class));
-//                    finish();
                 }
             });
         } else {
             Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
         }
 
+        //for each videoUri in lista
         if (videoUri != null) {
             StorageReference filePthVid = FirebaseStorage.getInstance().getReference("CourseVideos").child(System.currentTimeMillis() + "." + getFileExtension(videoUri));
-            StorageTask uploadTask = filePthVid.putFile(videoUri);
-            uploadTask.continueWithTask(new Continuation() {
+            filePthVid.putFile(videoUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
                     if (!task.isSuccessful()) {
@@ -176,8 +172,7 @@ public class AddActivity extends AppCompatActivity {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    Uri downloadUri = task.getResult();
-                    videoUrl = downloadUri.toString();
+                    String videoUrl = task.getResult().toString();
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
                     String videoId = ref.push().getKey();
@@ -195,7 +190,7 @@ public class AddActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No video was selected!", Toast.LENGTH_SHORT).show();
         }
     }
 
