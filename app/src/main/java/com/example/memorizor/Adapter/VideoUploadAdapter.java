@@ -61,7 +61,7 @@ public class VideoUploadAdapter extends RecyclerView.Adapter<VideoUploadAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            videoView = itemView.findViewById(R.id.video_view);
+            videoView = itemView.findViewById(R.id.video_upload_view);
         }
     }
 

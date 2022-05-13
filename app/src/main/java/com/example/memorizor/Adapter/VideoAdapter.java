@@ -21,16 +21,16 @@ import java.util.List;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     private Context mContext;
     private List<Video> mVideos;
-    private List<Uri> mVideoUris;
+//    private List<Uri> mVideoUris;
 
     public VideoAdapter(Context mContext, List<Video> mVideos) {
         this.mContext = mContext;
         this.mVideos = mVideos;
 
-        this.mVideoUris = new ArrayList<>();
-        for(Video video : mVideos){
-            this.mVideoUris.add(Uri.parse(video.getVideoUrl()));
-        }
+//        this.mVideoUris = new ArrayList<>();
+//        for(Video video : mVideos){
+//            this.mVideoUris.add(Uri.parse(video.getVideoUrl()));
+//        }
     }
 
     @NonNull
@@ -42,16 +42,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Uri videoUri = mVideoUris.get(position);
+//        Uri videoUri = mVideoUris.get(position);
 
         MediaController mediaController = new MediaController(mContext);
         mediaController.setAnchorView(holder.videoView);
         holder.videoView.setMediaController(mediaController);
-        holder.videoView.setVideoURI(videoUri);
+        holder.videoView.setVideoPath(mVideos.get(position).getVideoUrl());
+        System.out.println(mVideos.get(position).getVideoUrl());
         holder.videoView.requestFocus();
         holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                System.out.println("Paused");
                 holder.videoView.pause();
             }
         });
@@ -59,7 +61,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return mVideoUris.size();
+        return mVideos.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

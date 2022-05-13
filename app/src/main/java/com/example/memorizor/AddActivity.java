@@ -38,7 +38,6 @@ import java.util.List;
 public class AddActivity extends AppCompatActivity {
 
     private ImageView image;
-    private VideoView video;
     private EditText title;
     private EditText description;
     private EditText price;
@@ -65,7 +64,6 @@ public class AddActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         image = findViewById(R.id.image);
-        video = findViewById(R.id.video_view);
         title = findViewById(R.id.etTitle);
         description = findViewById(R.id.etDescription);
         price = findViewById(R.id.etPrice);
