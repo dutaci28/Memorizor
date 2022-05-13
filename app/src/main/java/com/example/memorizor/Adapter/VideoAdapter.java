@@ -21,16 +21,10 @@ import java.util.List;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     private Context mContext;
     private List<Video> mVideos;
-//    private List<Uri> mVideoUris;
 
     public VideoAdapter(Context mContext, List<Video> mVideos) {
         this.mContext = mContext;
         this.mVideos = mVideos;
-
-//        this.mVideoUris = new ArrayList<>();
-//        for(Video video : mVideos){
-//            this.mVideoUris.add(Uri.parse(video.getVideoUrl()));
-//        }
     }
 
     @NonNull
@@ -42,8 +36,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        Uri videoUri = mVideoUris.get(position);
-
         MediaController mediaController = new MediaController(mContext);
         mediaController.setAnchorView(holder.videoView);
         holder.videoView.setMediaController(mediaController);

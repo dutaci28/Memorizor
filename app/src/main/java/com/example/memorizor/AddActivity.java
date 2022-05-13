@@ -147,8 +147,8 @@ public class AddActivity extends AppCompatActivity {
 
             for (int i = 0; i < mVideoUploadUris.size(); i++) {
                 int index = i;
-                StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(videoUri));
-                videoPath.putFile(videoUri).continueWithTask(new Continuation() {
+                StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(mVideoUploadUris.get(index)));
+                videoPath.putFile(mVideoUploadUris.get(index)).continueWithTask(new Continuation() {
                     @Override
                     public Object then(@NonNull Task task) throws Exception {
                         if (!task.isSuccessful()) {
