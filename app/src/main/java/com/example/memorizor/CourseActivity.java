@@ -7,17 +7,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Adapter.VideoAdapter;
 import com.example.memorizor.Adapter.VideoUploadAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Video;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -36,11 +41,15 @@ public class CourseActivity extends AppCompatActivity {
     private RecyclerView rv_videos;
 
     private String courseId;
+    private Course course;
+    private Object lock = new Object();
 
     private VideoAdapter videoAdapter;
 
     private List<Video> mVideos = new ArrayList<>();
     private List<Uri> mVideoUris = new ArrayList<>();
+
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,7 @@ public class CourseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course);
 
         getSupportActionBar().hide();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         iv_photo = findViewById(R.id.image);
         tv_title = findViewById(R.id.title);
@@ -64,9 +74,36 @@ public class CourseActivity extends AppCompatActivity {
         rv_videos.setAdapter(videoAdapter);
 
         readCourse();
+        isPurchased(courseId, btn_buy);
+        isBookmarked(courseId, btn_bookmark);
+
+
+        btn_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btn_buy.getText().toString().equals("Buy Course")) {
+                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
+
+                }
+            }
+        });
+
+        btn_bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((Boolean) btn_bookmark.getTag()) {
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).setValue(true);
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).removeValue();
+                }
+            }
+        });
     }
 
     private void readCourse() {
+
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Courses")
                 .orderByChild("courseId").startAt(courseId).endAt(courseId + "\uf8ff");
 
@@ -74,7 +111,7 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    Course course = snap.getValue(Course.class);
+                    course = snap.getValue(Course.class);
                     tv_title.setText(course.getTitle());
                     tv_description.setText(course.getDescription());
                     Picasso.get().load(course.getImageUrl()).into(iv_photo);
@@ -103,6 +140,47 @@ public class CourseActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void isPurchased(final String id, final Button btn_buy) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(id).exists()) {
+                    btn_buy.setText("Refund Course");
+                } else {
+                    btn_buy.setText("Buy Course");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isBookmarked(final String id, final ImageButton btn_bookmark) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(id).exists()) {
+                    btn_bookmark.setTag(false);
+                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_remove_24);
+                } else {
+                    btn_bookmark.setTag(true);
+                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });

@@ -101,25 +101,25 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         return mCourses.size();
     }
 
-    private void isPurchased(final String id, final Button btn_buy) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists()) {
-                    btn_buy.setText("Refund Course");
-                }
-                else {
-                    btn_buy.setText("Buy Course");
-                }
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void isPurchased(final String id, final Button btn_buy) {
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.child(id).exists()) {
+//                    btn_buy.setText("Refund Course");
+//                }
+//                else {
+//                    btn_buy.setText("Buy Course");
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private void isBookmarked(final String id, final ImageButton btn_bookmark) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked");
