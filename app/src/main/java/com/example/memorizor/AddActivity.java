@@ -8,18 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -34,10 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,17 +73,17 @@ public class AddActivity extends AppCompatActivity {
         upload = findViewById(R.id.btnUpload);
         btn_pick_video = findViewById(R.id.btn_pick_video);
 
+        rv_videos_upload.setHasFixedSize(true);
+        rv_videos_upload.setLayoutManager(new LinearLayoutManager(this));
+        videoUploadAdapter = new VideoUploadAdapter(this, mVideoUploadUris);
+        rv_videos_upload.setAdapter(videoUploadAdapter);
+
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_IMAGE_FROM_GALLERY);
             }
         });
-
-        rv_videos_upload.setHasFixedSize(true);
-        rv_videos_upload.setLayoutManager(new LinearLayoutManager(this));
-        videoUploadAdapter = new VideoUploadAdapter(this, mVideoUploadUris);
-        rv_videos_upload.setAdapter(videoUploadAdapter);
 
         btn_pick_video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +110,6 @@ public class AddActivity extends AppCompatActivity {
         if (requestCode == GET_VIDEO_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             videoUri = data.getData();
             mVideoUploadUris.add(videoUri);
-
             videoUploadAdapter.notifyDataSetChanged();
         }
     }
@@ -127,7 +119,7 @@ public class AddActivity extends AppCompatActivity {
         pd.setMessage("Uploading");
         pd.show();
         if (imageUri != null) {
-            StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(title.getText().toString()+ System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(title.getText().toString() + System.currentTimeMillis() + "." + getFileExtension(imageUri));
             imagePath.putFile(imageUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
@@ -154,78 +146,45 @@ public class AddActivity extends AppCompatActivity {
                     ref.child(courseId).setValue(map);
                 }
             });
-        } else {
-            Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
-        }
 
-        for(int i=0;i<mVideoUploadUris.size();i++){
-            int index = i;
-            StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(videoUri));
-            videoPath.putFile(videoUri).continueWithTask(new Continuation() {
-                @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
+            for (int i = 0; i < mVideoUploadUris.size(); i++) {
+                int index = i;
+                StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(videoUri));
+                videoPath.putFile(videoUri).continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return videoPath.getDownloadUrl();
                     }
-                    return videoPath.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    String videoUrl = task.getResult().toString();
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        String videoUrl = task.getResult().toString();
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
 
-                    String videoId = ref.push().getKey();
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("videoId", videoId);
-                    map.put("videoUrl", videoUrl);
-                    map.put("videoIndex", index);
-                    map.put("hostCourseId", courseId);
-                    //map.put("title", title.getText().toString());
+                        String videoId = ref.push().getKey();
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("videoId", videoId);
+                        map.put("videoUrl", videoUrl);
+                        map.put("videoIndex", index);
+                        map.put("hostCourseId", courseId);
+                        //map.put("title", title.getText().toString());
 
-                    ref.child(videoId).setValue(map);
+                        ref.child(videoId).setValue(map);
 
-                    pd.dismiss();
-                    startActivity(new Intent(AddActivity.this, MainActivity.class));
-                    finish();
-                }
-            });
+                        pd.dismiss();
+                        startActivity(new Intent(AddActivity.this, MainActivity.class));
+                        finish();
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(this, "Upload data incomplete! (No image was selected)", Toast.LENGTH_SHORT).show();
         }
 
-//        if (videoUri != null) {
-//            StorageReference filePthVid = FirebaseStorage.getInstance().getReference("CourseVideos").child(System.currentTimeMillis() + "." + getFileExtension(videoUri));
-//            filePthVid.putFile(videoUri).continueWithTask(new Continuation() {
-//                @Override
-//                public Object then(@NonNull Task task) throws Exception {
-//                    if (!task.isSuccessful()) {
-//                        throw task.getException();
-//                    }
-//                    return filePthVid.getDownloadUrl();
-//                }
-//            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Uri> task) {
-//                    String videoUrl = task.getResult().toString();
-//
-//                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Videos");
-//                    String videoId = ref.push().getKey();
-//                    HashMap<String, Object> map = new HashMap<>();
-//                    map.put("videoId", videoId);
-//                    map.put("videoUrl", videoUrl);
-//                    map.put("hostCourseId", courseId);
-//                    //map.put("title", title.getText().toString());
-//
-//                    ref.child(videoId).setValue(map);
-//
-//                    pd.dismiss();
-//                    startActivity(new Intent(AddActivity.this, MainActivity.class));
-//                    finish();
-//                }
-//            });
-//        } else {
-//            Toast.makeText(this, "No video was selected!", Toast.LENGTH_SHORT).show();
-//        }
 
     }
 

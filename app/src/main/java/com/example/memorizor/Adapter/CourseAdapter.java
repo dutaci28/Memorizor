@@ -1,6 +1,7 @@
 package com.example.memorizor.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.memorizor.CourseActivity;
+import com.example.memorizor.Fragments.SearchFragment;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,27 +54,25 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Course course = mCourses.get(position);
 
-
         holder.title.setText(course.getTitle());
         holder.description.setText(course.getDescription());
         holder.price.setText("$" + course.getPrice());
-
         Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
-        isPurchased(course.getCourseId() , holder.btn_buy);
+//        isPurchased(course.getCourseId() , holder.btn_buy);
         isBookmarked(course.getCourseId(), holder.btn_bookmark);
 
-        holder.btn_buy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(holder.btn_buy.getText().toString().equals("Buy Course")){
-                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
-                } else {
-                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
-
-                }
-            }
-        });
+//        holder.btn_buy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(holder.btn_buy.getText().toString().equals("Buy Course")){
+//                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
+//                } else {
+//                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
+//
+//                }
+//            }
+//        });
 
         holder.btn_bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +82,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).removeValue();
                 }
+            }
+        });
+
+        holder.btn_open_course.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CourseActivity.class);
+                intent.putExtra("courseId", course.getCourseId());
+                mContext.startActivity(intent);
             }
         });
 
@@ -138,7 +148,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public TextView description;
         public TextView price;
         public ImageView image;
-        public Button btn_buy;
+//        public Button btn_buy;
+        public Button btn_open_course;
         public ImageButton btn_bookmark;
 
         public ViewHolder(@NonNull View itemView) {
@@ -148,7 +159,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price);
-            btn_buy = itemView.findViewById(R.id.btn_buy);
+//            btn_buy = itemView.findViewById(R.id.btn_buy);
+            btn_open_course = itemView.findViewById(R.id.btn_open_course);
             btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
         }
     }

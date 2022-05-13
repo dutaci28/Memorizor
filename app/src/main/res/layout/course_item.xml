@@ -75,16 +75,25 @@
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <Button-->
+<!--        android:id="@+id/btn_buy"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="4dp"-->
+<!--        android:layout_marginTop="120dp"-->
+<!--        android:text="Buy Course"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/image"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
     <Button
-        android:id="@+id/btn_buy"
+        android:id="@+id/btn_open_course"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="120dp"
-        android:text="Buy Course"
+        android:text="See details"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <ImageButton
         android:id="@+id/btn_bookmark"
@@ -101,11 +110,11 @@
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
         android:maxWidth="200dp"
         android:text="$20.00"
-        app:layout_constraintStart_toEndOf="@+id/btn_buy"
+        app:layout_constraintStart_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent" />
 
 

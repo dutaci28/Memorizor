@@ -39,24 +39,22 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search,container,false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         rv_courses = view.findViewById(R.id.rv_courses);
-        rv_courses.setHasFixedSize(true);
-        rv_courses.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        mCourses = new ArrayList<>();
-        courseAdapter = new CourseAdapter(getContext(),mCourses,true);
-        rv_courses.setAdapter(courseAdapter);
-
         et_search = view.findViewById(R.id.et_search);
 
+        mCourses = new ArrayList<>();
+
+        rv_courses.setHasFixedSize(true);
+        rv_courses.setLayoutManager(new LinearLayoutManager(getContext()));
+        courseAdapter = new CourseAdapter(getContext(), mCourses, true);
+        rv_courses.setAdapter(courseAdapter);
         readCourses();
 
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -66,7 +64,6 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -78,9 +75,9 @@ public class SearchFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(TextUtils.isEmpty(et_search.getText().toString())){
+                if (TextUtils.isEmpty(et_search.getText().toString())) {
                     mCourses.clear();
-                    for(DataSnapshot snap : snapshot.getChildren()){
+                    for (DataSnapshot snap : snapshot.getChildren()) {
                         Course course = snap.getValue(Course.class);
                         mCourses.add(course);
                     }
@@ -95,7 +92,7 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void searchCourse(String s){
+    private void searchCourse(String s) {
         Query query = FirebaseDatabase.getInstance().getReference().child("Courses")
                 .orderByChild("title").startAt(s).endAt(s + "\uf8ff");
 
@@ -103,7 +100,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mCourses.clear();
-                for(DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     Course course = snap.getValue(Course.class);
                     mCourses.add(course);
                 }
