@@ -74,9 +74,9 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            startActivity(new Intent(StartActivity.this , MainActivity.class));
-            finish();
-        }
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+//            startActivity(new Intent(StartActivity.this , MainActivity.class));
+//            finish();
+//        }
     }
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.memorizor.CourseActivity;
 import com.example.memorizor.Fragments.SearchFragment;
 import com.example.memorizor.Model.Course;
+import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -52,6 +54,28 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = mCourses.get(position).getPublisher();
+        final User[] hostUser = new User[1];
+
+        Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
+                .orderByChild("id").startAt(uid).endAt(uid + "\uf8ff");
+
+        query1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    hostUser[0] = snap.getValue(User.class);
+                    holder.fullname.setText(hostUser[0].getName());
+                    holder.username.setText(hostUser[0].getUsername());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         Course course = mCourses.get(position);
 
         holder.title.setText(course.getTitle());
@@ -59,20 +83,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         holder.price.setText("$" + course.getPrice());
         Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
-//        isPurchased(course.getCourseId() , holder.btn_buy);
         isBookmarked(course.getCourseId(), holder.btn_bookmark);
-
-//        holder.btn_buy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(holder.btn_buy.getText().toString().equals("Buy Course")){
-//                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
-//                } else {
-//                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
-//
-//                }
-//            }
-//        });
 
         holder.btn_bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,26 +112,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         return mCourses.size();
     }
 
-//    private void isPurchased(final String id, final Button btn_buy) {
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.child(id).exists()) {
-//                    btn_buy.setText("Refund Course");
-//                }
-//                else {
-//                    btn_buy.setText("Buy Course");
-//                }
-//
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-
     private void isBookmarked(final String id, final ImageButton btn_bookmark) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked");
         reference.addValueEventListener(new ValueEventListener() {
@@ -144,22 +135,25 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+
+        public TextView fullname;
+        public TextView username;
         public TextView title;
         public TextView description;
         public TextView price;
         public ImageView image;
-//        public Button btn_buy;
         public Button btn_open_course;
         public ImageButton btn_bookmark;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            fullname = itemView.findViewById(R.id.fullname);
+            username = itemView.findViewById(R.id.username);
             image = itemView.findViewById(R.id.image);
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price);
-//            btn_buy = itemView.findViewById(R.id.btn_buy);
             btn_open_course = itemView.findViewById(R.id.btn_open_course);
             btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
         }
