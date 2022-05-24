@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
 
     private Context mContext;
@@ -67,6 +69,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     hostUser[0] = snap.getValue(User.class);
                     holder.fullname.setText(hostUser[0].getName());
                     holder.username.setText(hostUser[0].getUsername());
+                    Picasso.get().load(hostUser[0].getProfileImageUrl()).into(holder.profileImage);
                 }
             }
 
@@ -144,6 +147,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public ImageView image;
         public Button btn_open_course;
         public ImageButton btn_bookmark;
+        public CircleImageView profileImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -156,6 +160,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             price = itemView.findViewById(R.id.price);
             btn_open_course = itemView.findViewById(R.id.btn_open_course);
             btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
+            profileImage = itemView.findViewById(R.id.image_profile);
         }
     }
 

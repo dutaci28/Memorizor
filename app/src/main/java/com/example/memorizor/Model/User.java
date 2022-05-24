@@ -5,15 +5,17 @@ public class User {
     private String id;
     private String name;
     private String username;
+    private String profileImageUrl;
 
     public User() {
     }
 
-    public User(String email, String id, String name, String username) {
+    public User(String email, String id, String name, String username, String profileImageUrl) {
         this.email = email;
         this.id = id;
         this.name = name;
         this.username = username;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getEmail() {
@@ -46,5 +48,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
