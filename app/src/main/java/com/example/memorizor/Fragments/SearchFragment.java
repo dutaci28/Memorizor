@@ -37,8 +37,7 @@ public class SearchFragment extends Fragment {
     private EditText et_search;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         rv_courses = view.findViewById(R.id.rv_courses);
@@ -76,6 +75,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (TextUtils.isEmpty(et_search.getText().toString())) {
+
                     mCourses.clear();
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         Course course = snap.getValue(Course.class);
