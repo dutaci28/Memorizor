@@ -11,13 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Adapter.VideoAdapter;
 import com.example.memorizor.Adapter.VideoUploadAdapter;
 import com.example.memorizor.Model.Course;
+import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.Video;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,9 +32,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CourseActivity extends AppCompatActivity {
@@ -39,6 +48,7 @@ public class CourseActivity extends AppCompatActivity {
     private ImageButton btn_bookmark;
     private Button btn_buy;
     private RecyclerView rv_videos;
+    private RatingBar rating_bar;
 
     private String courseId;
     private Course course;
@@ -65,6 +75,7 @@ public class CourseActivity extends AppCompatActivity {
         btn_bookmark = findViewById(R.id.btn_bookmark);
         btn_buy = findViewById(R.id.btn_buy);
         rv_videos = findViewById(R.id.rv_videos);
+        rating_bar = findViewById(R.id.rating_bar);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -76,7 +87,6 @@ public class CourseActivity extends AppCompatActivity {
         readCourse();
         isPurchased(courseId, btn_buy);
         isBookmarked(courseId, btn_bookmark);
-
 
         btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +110,27 @@ public class CourseActivity extends AppCompatActivity {
                 }
             }
         });
+
+        rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                int ratingValue = (int) rating_bar.getRating();
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+                String ratingId = ref.push().getKey();
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("courseId", courseId);
+                map.put("ratingId", ratingId);
+                map.put("value", ratingValue);
+
+                ref.child(ratingId).setValue(map);
+
+                //problema cu rating, de fiecare data cand trimiti un rating nou se trimite si ratingul deja afisat ( media celor existente )
+                //fix posibil creare o bara de rating doar pt acordat ratinguri si una doar pt afisat
+            }
+        });
     }
+
 
     private void readCourse() {
 
@@ -124,10 +154,41 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
-        Query query2 = FirebaseDatabase.getInstance().getReference().child("Videos")
+        Query query2 = FirebaseDatabase.getInstance().getReference().child("Ratings")
+                .orderByChild("courseId").startAt(courseId).endAt(courseId + "\uf8ff");
+
+        List<Rating> ratings = new ArrayList<>();
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Rating rating = snap.getValue(Rating.class);
+                    ratings.add(rating);
+                }
+
+                int finalRating = 0;
+                int noRatings = 0;
+                for (Rating r : ratings) {
+                    noRatings++;
+                    finalRating += r.getValue();
+
+                }
+                if (noRatings > 0) {
+                    finalRating /= noRatings;
+                }
+                rating_bar.setRating((int)finalRating);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        Query query3 = FirebaseDatabase.getInstance().getReference().child("Videos")
                 .orderByChild("hostCourseId").startAt(courseId).endAt(courseId + "\uf8ff");
 
-        query2.addValueEventListener(new ValueEventListener() {
+        query3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {

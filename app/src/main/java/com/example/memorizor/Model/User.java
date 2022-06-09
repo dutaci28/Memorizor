@@ -2,7 +2,7 @@ package com.example.memorizor.Model;
 
 public class User {
     private String email;
-    private String id;
+    private String userId;
     private String name;
     private String username;
     private String profileImageUrl;
@@ -10,9 +10,9 @@ public class User {
     public User() {
     }
 
-    public User(String email, String id, String name, String username, String profileImageUrl) {
+    public User(String email, String userId, String name, String username, String profileImageUrl) {
         this.email = email;
-        this.id = id;
+        this.userId = userId;
         this.name = name;
         this.username = username;
         this.profileImageUrl = profileImageUrl;
@@ -27,11 +27,11 @@ public class User {
     }
 
     public String getId() {
-        return id;
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {

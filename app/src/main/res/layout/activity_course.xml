@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="158dp"
+        android:layout_height="131dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,12 +31,37 @@
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="242dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:stepSize="1"
+        android:numStars="5"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        android:transformPivotX="0dp"
+        android:transformPivotY="0dp"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <Button
+        android:id="@+id/btn_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="112dp"
+        android:text="Buy Course"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/description"
         android:layout_width="367dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="168dp"
         android:maxWidth="200dp"
         android:padding="5dp"
         android:text="  Course description this text is longer. Nunc at efficitur augue. Aenean et fringilla velit, et tempor urna. In hac habitasse platea dictumst. Curabitur maximus sit amet dolor id dapibus. Vivamus sodales eget augue id volutpat. Pellentesque varius, nulla nec rutrum auctor, urna turpis suscipit augue, euismod sagittis urna metus ut nisi."
@@ -48,20 +73,9 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="27dp"
         android:layout_height="47dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/ic_baseline_bookmark_border_24"
-        app:layout_constraintStart_toEndOf="@+id/btn_buy"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_buy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
-        android:text="Buy Course"
-        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintStart_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -71,7 +85,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintVertical_bias="0.0" />

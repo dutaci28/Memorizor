@@ -1,6 +1,8 @@
 package com.example.memorizor.Fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.example.memorizor.MainActivity;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.example.memorizor.RegisterActivity;
+import com.example.memorizor.StartActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,6 +47,7 @@ public class AccountFragment extends Fragment {
     private CircleImageView profileImage;
     private TextView username;
     private TextView fullname;
+    private Button signout;
 
     private User currentUser;
 
@@ -56,6 +60,7 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.image_profile);
         username = view.findViewById(R.id.tv_username);
         fullname = view.findViewById(R.id.tv_fullname);
+        signout = view.findViewById(R.id.btn_signout);
 
         readUser();
 
@@ -63,6 +68,31 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_IMAGE_FROM_GALLERY);
+            }
+        });
+
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(getContext() , StartActivity.class));
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
 
