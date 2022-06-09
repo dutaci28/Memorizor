@@ -17,13 +17,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Adapter.VideoUploadAdapter;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -116,6 +113,8 @@ public class AddActivity extends AppCompatActivity {
         ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Uploading");
         pd.show();
+
+        //incarcare curs si video-uri
         if (imageUri != null) {
             StorageReference imagePath = FirebaseStorage.getInstance().getReference("CourseImages").child(title.getText().toString() + System.currentTimeMillis() + "." + getFileExtension(imageUri));
             imagePath.putFile(imageUri).continueWithTask(new Continuation() {
@@ -140,8 +139,24 @@ public class AddActivity extends AppCompatActivity {
                     map.put("description", description.getText().toString());
                     map.put("price", price.getText().toString());
                     map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
                     ref.child(courseId).setValue(map);
+
+                    //extragere hashtags
+                    String input = description.getText().toString();
+                    List<String> hashTags = new ArrayList<>();
+                    for(String s : input.split(" ")){
+                        if(s.charAt(0) == '#'){
+                            hashTags.add(s);
+                        }
+                    }
+
+                    //introducere hashtags in baza de date
+                    for(String hashTag : hashTags){
+                        if(!hashTag.equals(null)){
+                            FirebaseDatabase.getInstance().getReference().child("Hashtags").child(hashTag.substring(1)).child(courseId).setValue(true);
+
+                        }
+                    }
                 }
             });
 
@@ -182,6 +197,7 @@ public class AddActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Upload data incomplete! (No image was selected)", Toast.LENGTH_SHORT).show();
         }
+
 
 
     }

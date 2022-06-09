@@ -8,6 +8,7 @@ public class Course {
     private String publisher;
     private String title;
 
+
     public Course() {
     }
 
