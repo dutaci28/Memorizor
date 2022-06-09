@@ -5,12 +5,20 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <VideoView
-        android:id="@+id/video_view"
+    <ImageView
+        android:id="@+id/image_view"
         android:layout_width="410dp"
         android:layout_height="198dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    <VideoView-->
+<!--        android:id="@+id/video_view"-->
+<!--        android:layout_width="410dp"-->
+<!--        android:layout_height="198dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

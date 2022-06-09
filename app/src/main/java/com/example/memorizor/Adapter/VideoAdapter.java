@@ -1,21 +1,28 @@
 package com.example.memorizor.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.memorizor.CourseActivity;
 import com.example.memorizor.Model.Video;
 import com.example.memorizor.R;
+import com.example.memorizor.VideoActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
@@ -36,19 +43,22 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MediaController mediaController = new MediaController(mContext);
-        mediaController.setAnchorView(holder.videoView);
-        holder.videoView.setMediaController(mediaController);
-        holder.videoView.setVideoPath(mVideos.get(position).getVideoUrl());
-        System.out.println(mVideos.get(position).getVideoUrl());
-        holder.videoView.requestFocus();
-        holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        int poz = position;
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(mVideos.get(poz).getVideoUrl(), new HashMap<String, String>());
+        Bitmap thumbnailImage = retriever.getFrameAtTime(50000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        holder.imageView.setImageBitmap(thumbnailImage);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                System.out.println("Paused");
-                holder.videoView.pause();
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, VideoActivity.class);
+                intent.putExtra("videoId", mVideos.get(poz).getVideoId());
+                mContext.startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -57,12 +67,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public VideoView videoView;
+        public ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            videoView = itemView.findViewById(R.id.video_view);
+            imageView = itemView.findViewById(R.id.image_view);
         }
     }
 }

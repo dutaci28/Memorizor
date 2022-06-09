@@ -13,8 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memorizor">
         <activity
+            android:name=".VideoActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"/>
+        <activity
             android:name=".CourseActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
         <activity
             android:name=".AddActivity"
             android:exported="true" />
