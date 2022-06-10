@@ -18,10 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.memorizor.MainActivity;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
-import com.example.memorizor.RegisterActivity;
 import com.example.memorizor.StartActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,8 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 

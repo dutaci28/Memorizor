@@ -49,7 +49,8 @@ public class CourseActivity extends AppCompatActivity {
     private ImageView iv_photo;
     private TextView tv_title;
     private TextView tv_description;
-    private ImageButton btn_bookmark;
+//    private ImageButton btn_bookmark;
+    private Button btn_bookmark;
     private Button btn_buy;
     private RecyclerView rv_videos;
     private RatingBar rating_bar;
@@ -95,7 +96,7 @@ public class CourseActivity extends AppCompatActivity {
         btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btn_buy.getText().toString().equals("Buy Course")) {
+                if (btn_buy.getText().toString().equals("Buy Now")) {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
@@ -219,7 +220,7 @@ public class CourseActivity extends AppCompatActivity {
                 if (dataSnapshot.child(id).exists()) {
                     btn_buy.setText("Refund Course");
                 } else {
-                    btn_buy.setText("Buy Course");
+                    btn_buy.setText("Buy Now");
                 }
 
             }
@@ -231,17 +232,17 @@ public class CourseActivity extends AppCompatActivity {
         });
     }
 
-    private void isBookmarked(final String id, final ImageButton btn_bookmark) {
+    private void isBookmarked(final String id, final Button btn_bookmark) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(id).exists()) {
                     btn_bookmark.setTag(false);
-                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_remove_24);
+                    btn_bookmark.setText("Bookmarked");
                 } else {
                     btn_bookmark.setTag(true);
-                    btn_bookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24);
+                    btn_bookmark.setText("Bookmark");
                 }
             }
 
