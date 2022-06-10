@@ -26,7 +26,6 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText username;
     private EditText name;
     private EditText email;
     private EditText password;
@@ -45,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        username = findViewById(R.id.username);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -66,24 +64,23 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txtUsername = username.getText().toString();
                 String txtName = name.getText().toString();
                 String txtEmail = email.getText().toString();
                 String txtPassword = password.getText().toString();
 
-                if (TextUtils.isEmpty(txtUsername) || TextUtils.isEmpty(txtName)
+                if (TextUtils.isEmpty(txtName)
                         || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)){
                     Toast.makeText(RegisterActivity.this, "Empty credentials!", Toast.LENGTH_SHORT).show();
                 } else if (txtPassword.length() < 6){
                     Toast.makeText(RegisterActivity.this, "Password too short!", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(txtUsername , txtName , txtEmail , txtPassword);
+                    registerUser(txtName , txtEmail , txtPassword);
                 }
             }
         });
     }
 
-    private void registerUser(final String username, final String name, final String email, String password) {
+    private void registerUser(final String name, final String email, String password) {
 
         pd.setMessage("Please Wait");
         pd.show();
@@ -95,7 +92,6 @@ public class RegisterActivity extends AppCompatActivity {
                 HashMap<String , Object> map = new HashMap<>();
                 map.put("name" , name);
                 map.put("email", email);
-                map.put("username" , username);
                 map.put("id" , mAuth.getCurrentUser().getUid());
                 map.put("profileImageUrl", "");
 

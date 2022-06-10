@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.memorizor.CourseActivity;
 import com.example.memorizor.Fragments.SearchFragment;
 import com.example.memorizor.Model.Course;
+import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +31,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -68,8 +73,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     hostUser[0] = snap.getValue(User.class);
                     holder.fullname.setText(hostUser[0].getName());
-                    holder.username.setText(hostUser[0].getUsername());
-                    Picasso.get().load(hostUser[0].getProfileImageUrl()).into(holder.profileImage);
                 }
             }
 
@@ -81,8 +84,38 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         Course course = mCourses.get(position);
 
+        Query query2 = FirebaseDatabase.getInstance().getReference().child("Ratings")
+                .orderByChild("courseId").startAt(course.getCourseId()).endAt(course.getCourseId() + "\uf8ff");
+
+        List<Rating> ratings = new ArrayList<>();
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Rating rating = snap.getValue(Rating.class);
+                    ratings.add(rating);
+                }
+
+                int finalRating = 0;
+                int noRatings = 0;
+                for (Rating r : ratings) {
+                    noRatings++;
+                    finalRating += r.getValue();
+
+                }
+                if (noRatings > 0) {
+                    finalRating /= noRatings;
+                }
+                holder.ratingBar.setRating((int)finalRating);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         holder.title.setText(course.getTitle());
-        holder.description.setText(course.getDescription());
         holder.price.setText("$" + course.getPrice());
         Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
@@ -99,7 +132,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             }
         });
 
-        holder.btn_open_course.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, CourseActivity.class);
@@ -140,27 +173,24 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView fullname;
-        public TextView username;
         public TextView title;
-        public TextView description;
         public TextView price;
         public ImageView image;
-        public Button btn_open_course;
         public ImageButton btn_bookmark;
-        public CircleImageView profileImage;
+        public RatingBar ratingBar;
+
+        public CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             fullname = itemView.findViewById(R.id.fullname);
-            username = itemView.findViewById(R.id.username);
             image = itemView.findViewById(R.id.image);
             title = itemView.findViewById(R.id.title);
-            description = itemView.findViewById(R.id.description);
             price = itemView.findViewById(R.id.price);
-            btn_open_course = itemView.findViewById(R.id.btn_open_course);
+            cardView = itemView.findViewById(R.id.cardView);
             btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
-            profileImage = itemView.findViewById(R.id.image_profile);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
         }
     }
 

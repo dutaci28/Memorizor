@@ -10,12 +10,16 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textSize="20dp"
+        android:textColor="@color/black"
         android:text="Browse our most popular categories"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_parent_items"
+        android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

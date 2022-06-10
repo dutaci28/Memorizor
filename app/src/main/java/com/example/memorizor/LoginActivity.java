@@ -12,11 +12,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.memorizor.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -57,7 +64,38 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
                     Toast.makeText(LoginActivity.this, "Empty Credentials!", Toast.LENGTH_SHORT).show();
                 } else {
-                    loginUser(txt_email , txt_password);
+
+                    Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
+                            .orderByChild("email").startAt(email.getText().toString()).endAt(email.getText().toString() + "\uf8ff");
+
+
+                    query1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            boolean exists = false;
+
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                User user = snap.getValue(User.class);
+                                if(user.getEmail().equals(email.getText().toString())){
+                                    exists = true;
+                                }
+                            }
+
+                            if(exists == false){
+                                Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                loginUser(txt_email , txt_password);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    //......................................................................
+
+
                 }
             }
         });

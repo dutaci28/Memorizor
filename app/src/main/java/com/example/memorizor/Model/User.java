@@ -4,17 +4,15 @@ public class User {
     private String email;
     private String userId;
     private String name;
-    private String username;
     private String profileImageUrl;
 
     public User() {
     }
 
-    public User(String email, String userId, String name, String username, String profileImageUrl) {
+    public User(String email, String userId, String name, String profileImageUrl) {
         this.email = email;
         this.userId = userId;
         this.name = name;
-        this.username = username;
         this.profileImageUrl = profileImageUrl;
     }
 
@@ -40,14 +38,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getProfileImageUrl() {

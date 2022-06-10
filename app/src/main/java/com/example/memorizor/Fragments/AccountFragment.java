@@ -37,6 +37,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountFragment extends Fragment {
 
     private CircleImageView profileImage;
-    private TextView username;
+    private TextView email;
     private TextView fullname;
     private Button signout;
 
@@ -58,7 +60,7 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         profileImage = view.findViewById(R.id.image_profile);
-        username = view.findViewById(R.id.tv_username);
+        email = view.findViewById(R.id.tv_email);
         fullname = view.findViewById(R.id.tv_fullname);
         signout = view.findViewById(R.id.btn_signout);
 
@@ -108,7 +110,7 @@ public class AccountFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     currentUser = snap.getValue(User.class);
-                    username.setText(currentUser.getUsername());
+                    email.setText(currentUser.getEmail());
                     fullname.setText(currentUser.getName());
                     if(currentUser.getProfileImageUrl().equals("")){
                         Toast.makeText(getContext(), "You can upload a profile image by clicking on the circle view.", Toast.LENGTH_SHORT).show();
@@ -136,7 +138,7 @@ public class AccountFragment extends Fragment {
             Uri imageUri = data.getData();
             profileImage.setImageURI(imageUri);
 
-            StorageReference profileImagePath = FirebaseStorage.getInstance().getReference("ProfileImages").child(currentUser.getUsername() + System.currentTimeMillis() + "." + getFileExtension(imageUri));
+            StorageReference profileImagePath = FirebaseStorage.getInstance().getReference("ProfileImages").child(currentUser.getName() + System.currentTimeMillis() + "." + getFileExtension(imageUri));
             profileImagePath.putFile(imageUri).continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
@@ -156,7 +158,6 @@ public class AccountFragment extends Fragment {
                     HashMap<String , Object> map = new HashMap<>();
                     map.put("name" , currentUser.getName());
                     map.put("email", currentUser.getEmail());
-                    map.put("username" , currentUser.getUsername());
                     map.put("id" , userId);
                     map.put("profileImageUrl", imageUrl);
 

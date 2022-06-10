@@ -23,12 +23,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_username"
+        android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
+        android:layout_marginStart="180dp"
         android:layout_marginTop="36dp"
-        android:text="username"
+        android:text="email"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_profile" />
@@ -38,11 +38,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
-        android:layout_marginTop="32dp"
         android:text="Full Name"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_username" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
 
     <Button
         android:id="@+id/btn_signout"
