@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.memorizor.Adapter.CourseAdapter;
+import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.example.memorizor.StartActivity;
@@ -35,7 +39,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,6 +52,11 @@ public class AccountFragment extends Fragment {
     private TextView email;
     private TextView fullname;
     private Button signout;
+
+    private RecyclerView rv_courses_account;
+    private List<String> accountCourses = new ArrayList<>();
+    private List<Course> mCourses = new ArrayList<>();
+    private CourseAdapter courseAdapter;
 
     private User currentUser;
 
@@ -61,6 +72,16 @@ public class AccountFragment extends Fragment {
         signout = view.findViewById(R.id.btn_signout);
 
         readUser();
+
+        rv_courses_account = view.findViewById(R.id.rv_courses_account);
+        rv_courses_account.setHasFixedSize(true);
+        rv_courses_account.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mCourses = new ArrayList<>();
+        courseAdapter = new CourseAdapter(getContext(), mCourses, true);
+        rv_courses_account.setAdapter(courseAdapter);
+
+        populateAccountCourses();
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,5 +182,40 @@ public class AccountFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void populateAccountCourses(){
+        FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(FirebaseAuth.getInstance().getCurrentUser().getUid()).endAt(FirebaseAuth.getInstance().getCurrentUser().getUid() + "\uf8ff").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                accountCourses.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    accountCourses.add(snap.getKey());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mCourses.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    for(String s : accountCourses){
+                        Course course = snap.getValue(Course.class);
+                        if(course.getCourseId().equals(s)){
+                            mCourses.add(course);
+                        }
+                    }
+                }
+                courseAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 }

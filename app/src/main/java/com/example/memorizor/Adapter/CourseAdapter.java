@@ -2,6 +2,9 @@ package com.example.memorizor.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +87,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         Course course = mCourses.get(position);
 
+
+        LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
         Query query2 = FirebaseDatabase.getInstance().getReference().child("Ratings")
                 .orderByChild("courseId").startAt(course.getCourseId()).endAt(course.getCourseId() + "\uf8ff");
 
