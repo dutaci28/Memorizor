@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.memorizor.Adapter.ParentAdapter;
+import com.example.memorizor.Model.Course;
 import com.example.memorizor.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,27 +21,36 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
     private RecyclerView rv_parent_items;
-    private List<String> hashTags;
+    private List<String> hashTags = new ArrayList<>();
     private ParentAdapter parentAdapter;
+
+    private Map<String, List<Course>> hashedCoursesMap = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        hashTags = new ArrayList<>();
+//        populateHashedCoursesMap();
+        Course c1 = new Course("afg213","un curs","https://firebasestorage.googleapis.com/v0/b/memorizor-3c813.appspot.com/o/CourseImages%2FJava%20SE81654953578002.jpg?alt=media&token=c190120f-fed6-4bec-939c-e19d0c124e22","11.11","afg231","JAVA SE8");
+        Course c2 = new Course("asdfsfg","un alt curs","https://firebasestorage.googleapis.com/v0/b/memorizor-3c813.appspot.com/o/CourseImages%2FPython%203.7%20pentru%20jon1654953614910.jpg?alt=media&token=fb9c25e9-3f69-4b10-ae77-7f716c52dc2d","22.11","asfdasdf","PYTHON 3.7");
+        List<Course> a = new ArrayList<>();
+        a.add(c1);
+        a.add(c2);
+        hashedCoursesMap.put("COURSES", a);
+        System.out.println(hashedCoursesMap.get(hashedCoursesMap.keySet().toArray()[0].toString()));
 
         rv_parent_items = view.findViewById(R.id.rv_parent_items);
         rv_parent_items.setHasFixedSize(true);
         rv_parent_items.setLayoutManager(new LinearLayoutManager(getContext()));
-        parentAdapter = new ParentAdapter(getContext(), hashTags);
+        parentAdapter = new ParentAdapter(getContext(), hashedCoursesMap);
         rv_parent_items.setAdapter(parentAdapter);
-
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Hashtags");
         reference.addValueEventListener(new ValueEventListener() {
@@ -61,4 +71,35 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+    private void populateHashedCoursesMap() {
+        List<Course> allCourses = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Course course = snap.getValue(Course.class);
+                    allCourses.add(course);
+                }
+                for (int poz = 0; poz < hashTags.size(); poz++) {
+                    List<Course> hashedCourses = new ArrayList<>();
+                    for (Course c : allCourses) {
+                        if (c.getDescription().contains("#" + hashTags.get(poz))) {
+                            hashedCourses.add(c);
+                        }
+                    }
+                    hashedCoursesMap.put(hashTags.get(poz), hashedCourses);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+
+        });
+
+    }
+
+
 }

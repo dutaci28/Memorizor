@@ -45,7 +45,7 @@ public class RegisterTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.register_tab_fragment, container, false);
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_register_tab, container, false);
 
         name = root.findViewById(R.id.et_register_name);
         email=root.findViewById(R.id.et_register_email);

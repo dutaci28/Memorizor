@@ -49,6 +49,7 @@ public class SearchFragment extends Fragment {
         rv_courses.setLayoutManager(new LinearLayoutManager(getContext()));
         courseAdapter = new CourseAdapter(getContext(), mCourses, true);
         rv_courses.setAdapter(courseAdapter);
+
         readCourses();
 
         et_search.addTextChangedListener(new TextWatcher() {

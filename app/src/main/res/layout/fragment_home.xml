@@ -13,7 +13,8 @@
         android:layout_margin="20dp"
         android:textSize="20dp"
         android:textColor="@color/black"
-        android:text="Browse our most popular categories"
+        android:textStyle="bold"
+        android:text="Browse our most popular categories:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
