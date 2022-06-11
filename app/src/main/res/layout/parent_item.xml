@@ -16,9 +16,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_child"
         android:padding="10dp"
+        android:divider="@null"
+        android:orientation="horizontal"
+        app:reverseLayout="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/tv_hashtag" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
