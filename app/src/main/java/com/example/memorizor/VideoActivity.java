@@ -46,7 +46,7 @@ public class VideoActivity extends AppCompatActivity {
 
     PlayerView playerView;
     ProgressBar progressBar;
-    ImageView btFullScreen;
+//    ImageView btFullScreen;
     SimpleExoPlayer simpleExoPlayer;
     boolean flag = false;
 
@@ -61,7 +61,7 @@ public class VideoActivity extends AppCompatActivity {
 
         playerView = findViewById(R.id.player_view);
         progressBar = findViewById(R.id.progress_bar);
-        btFullScreen = findViewById(R.id.bt_fullscreen);
+//        btFullScreen = findViewById(R.id.bt_fullscreen);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -105,20 +105,22 @@ public class VideoActivity extends AppCompatActivity {
 
                 });
 
-                btFullScreen.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(flag){
-                            btFullScreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen));
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            flag=false;
-                        } else {
-                            btFullScreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_exit));
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                            flag=true;
-                        }
-                    }
-                });
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+//                btFullScreen.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if(flag){
+//                            btFullScreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen));
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                            flag=false;
+//                        } else {
+//                            btFullScreen.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_exit));
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                            flag=true;
+//                        }
+//                    }
+//                });
             }
 
             @Override

@@ -76,11 +76,11 @@
                 android:id="@+id/exo_duration"
                 android:textColor="#CBCDC8"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/bt_fullscreen"
-                android:src="@drawable/ic_fullscreen"/>
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/bt_fullscreen"-->
+<!--                android:src="@drawable/ic_fullscreen"/>-->
 
         </LinearLayout>
 
@@ -92,7 +92,6 @@
             app:unplayed_color="#45424E"
             app:buffered_color="#95989F"
             app:played_color="#4d269d"/>
-
 
     </LinearLayout>
 
