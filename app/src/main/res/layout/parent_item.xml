@@ -14,13 +14,13 @@
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_child"
-        android:padding="10dp"
-        android:divider="@null"
-        android:orientation="horizontal"
-        app:reverseLayout="true"
+        android:id="@+id/rv_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_hashtag" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

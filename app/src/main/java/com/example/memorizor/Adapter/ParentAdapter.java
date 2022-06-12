@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,10 +50,9 @@ public class ParentAdapter extends RecyclerView.Adapter<ParentAdapter.ViewHolder
         String key = hashedCoursesMap.keySet().toArray()[poz].toString();
 
         holder.tv_hashtag.setText("#" + key);
-        holder.rv_child.setHasFixedSize(true);
-        holder.rv_child.setLayoutManager(new LinearLayoutManager(mContext));
+        holder.rv_parent.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
         childAdapter = new ChildAdapter(mContext, hashedCoursesMap.get(key));
-        holder.rv_child.setAdapter(childAdapter);
+        holder.rv_parent.setAdapter(childAdapter);
         childAdapter.notifyDataSetChanged();
     }
 
@@ -63,12 +63,12 @@ public class ParentAdapter extends RecyclerView.Adapter<ParentAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_hashtag;
-        public RecyclerView rv_child;
+        public RecyclerView rv_parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_hashtag = itemView.findViewById(R.id.tv_hashtag);
-            rv_child = itemView.findViewById(R.id.rv_child);
+            rv_parent = itemView.findViewById(R.id.rv_parent);
         }
     }
 }

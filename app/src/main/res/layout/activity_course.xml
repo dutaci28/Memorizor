@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:maxLines="1"
+        android:layout_marginTop="10dp"
         android:text="Course Title"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="20dp"
@@ -36,15 +37,17 @@
         android:id="@+id/rating_bar"
         android:layout_width="246dp"
         android:layout_height="41dp"
-        android:layout_marginTop="8dp"
         android:background="#FFFFFF"
         android:numStars="5"
         android:scaleX=".5"
         android:scaleY=".5"
         android:stepSize="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/image"
+        app:layout_constraintVertical_bias="0.06" />
 
     <TextView
         android:id="@+id/tv_price"
@@ -80,20 +83,20 @@
 
     <Button
         android:id="@+id/btn_buy"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_bg"
         android:text="Buy Now"
         android:textSize="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".6"
+        app:layout_constraintHorizontal_bias=".5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <Button
         android:id="@+id/btn_bookmark"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_bg"

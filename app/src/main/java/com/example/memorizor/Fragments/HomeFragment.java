@@ -37,17 +37,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        Course c1 = new Course("afg213","un curs","https://firebasestorage.googleapis.com/v0/b/memorizor-3c813.appspot.com/o/CourseImages%2FJava%20SE81654953578002.jpg?alt=media&token=c190120f-fed6-4bec-939c-e19d0c124e22","11.11","afg231","JAVA SE8");
-//        Course c2 = new Course("asdfsfg","un alt curs","https://firebasestorage.googleapis.com/v0/b/memorizor-3c813.appspot.com/o/CourseImages%2FPython%203.7%20pentru%20jon1654953614910.jpg?alt=media&token=fb9c25e9-3f69-4b10-ae77-7f716c52dc2d","22.11","asfdasdf","PYTHON 3.7");
-//        List<Course> a = new ArrayList<>();
-//        a.add(c1);
-//        a.add(c2);
-//        Course c3 = new Course("afg213","un ultim curs","https://firebasestorage.googleapis.com/v0/b/memorizor-3c813.appspot.com/o/CourseImages%2FJava%20SE81654953578002.jpg?alt=media&token=c190120f-fed6-4bec-939c-e19d0c124e22","11.11","afg231","MIRCEA");
-//        List<Course> b = new ArrayList<>();
-//        b.add(c3);
-//        hashedCoursesMap.put("SCOALA", a);
-//        hashedCoursesMap.put("FACULTATE", b);
-
         rv_parent_items = view.findViewById(R.id.rv_parent_items);
         rv_parent_items.setHasFixedSize(true);
         rv_parent_items.setLayoutManager(new LinearLayoutManager(getContext()));
