@@ -15,7 +15,8 @@
         <activity
             android:name=".VideoActivity"
             android:exported="true"
-            android:screenOrientation="landscape"/>
+            android:configChanges="orientation|screenSize|layoutDirection"
+            />
         <activity
             android:name=".CourseActivity"
             android:exported="true"
