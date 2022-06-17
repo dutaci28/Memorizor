@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     hashTags.add(snap.getKey());
                 }
-                System.out.println(hashTags);
                 parentAdapter.notifyDataSetChanged();
 
                 List<Course> allCourses = new ArrayList<>();
@@ -72,7 +71,6 @@ public class HomeFragment extends Fragment {
                             }
                             hashedCoursesMap.put(hashTags.get(poz), hashedCourses);
                         }
-                        System.out.println(hashedCoursesMap);
                         parentAdapter.notifyDataSetChanged();
                     }
                     @Override

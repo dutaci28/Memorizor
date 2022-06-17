@@ -2,6 +2,7 @@ package com.example.memorizor.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,9 @@ import com.example.memorizor.R;
 import com.squareup.picasso.Picasso;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder>{
@@ -38,7 +42,17 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int poz = position;
-        Picasso.get().load(hashedCourses.get(poz).getImageUrl()).into(holder.image_child);
+        InputStream is = null;
+        try {
+            is = (InputStream) new URL(hashedCourses.get(poz).getImageUrl()).getContent();
+            Drawable d = Drawable.createFromStream(is, "preview");
+            holder.image_child.setImageDrawable(d);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        Picasso.get().load(hashedCourses.get(poz).getImageUrl()).into(holder.image_child);
+
         holder.image_child.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
