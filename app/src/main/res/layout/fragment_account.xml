@@ -18,7 +18,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/backgroudn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".5"
+        app:layout_constraintHeight_percent=".45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.1" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/tv_fullname"-->
@@ -54,8 +54,9 @@
         android:text="Full Name"
         android:textSize="20dp"
         android:textStyle="italic"
+        android:textColor="@color/white"
         android:padding="10dp"
-        android:background="@drawable/et_bg"
+        android:background="@drawable/et_bg_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +71,8 @@
         android:text="email@email.com"
         android:textSize="20dp"
         android:padding="10dp"
-        android:background="@drawable/et_bg"
+        android:textColor="@color/white"
+        android:background="@drawable/et_bg_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +86,8 @@
         android:hint="Re-enter password"
         android:textSize="20dp"
         android:padding="10dp"
-        android:background="@drawable/et_bg"
+        android:textColorHint="@color/white"
+        android:background="@drawable/et_bg_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
