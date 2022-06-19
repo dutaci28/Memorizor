@@ -4,122 +4,180 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="750dp"
     tools:context=".CourseActivity">
 
-    <ImageView
-        android:id="@+id/image"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/icon"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:maxLines="1"
-        android:layout_marginTop="10dp"
-        android:text="Course Title"
-        android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image" />
-
-    <RatingBar
-        android:id="@+id/rating_bar"
-        android:layout_width="246dp"
-        android:layout_height="41dp"
-        android:background="#FFFFFF"
-        android:numStars="5"
-        android:scaleX=".5"
-        android:scaleY=".5"
-        android:stepSize="1"
+        android:layout_height="match_parent"
+        android:minHeight="750dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image"
-        app:layout_constraintVertical_bias="0.06" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="$20.99"
-        android:textSize="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="750dp"
+            >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_videos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_buy" />
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon"
+                android:clickable="true"
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/btn_bookmark"-->
-    <!--        style="?android:attr/borderlessButtonStyle"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:src="@drawable/ic_baseline_bookmark_border_24"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/btn_buy"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/description"-->
-    <!--        app:layout_constraintWidth_percent=".1" />-->
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_buy"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_bg"
-        android:text="Buy Now"
-        android:textSize="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:maxLines="1"
+                android:text="Course Title"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image" />
 
-    <Button
-        android:id="@+id/btn_bookmark"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_bg"
-        android:text="Bookmark"
-        android:textSize="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".1"
-        app:layout_constraintStart_toEndOf="@+id/btn_buy"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="246dp"
+                android:layout_height="41dp"
+                android:background="#FFFFFF"
+                android:numStars="5"
+                android:scaleX=".5"
+                android:scaleY=".5"
+                android:stepSize="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image"
+                app:layout_constraintVertical_bias="0.06" />
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="367dp"
-        android:layout_height="wrap_content"
-        android:maxWidth="200dp"
-        android:padding="5dp"
-        android:text="  Course description this text is longer. Nunc at efficitur augue. Aenean et fringilla velit, et tempor urna. In hac habitasse platea dictumst. Curabitur maximus sit amet dolor id dapibus. Vivamus sodales eget augue id volutpat. Pellentesque varius, nulla nec rutrum auctor, urna turpis suscipit augue, euismod sagittis urna metus ut nisi."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="$20.99"
+                android:textSize="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias=".1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_buy">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_videos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="#90000000"
+                    android:elevation="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/rv_videos"
+                    app:layout_constraintStart_toStartOf="@+id/rv_videos"
+                    app:layout_constraintTop_toTopOf="@+id/rv_videos" />
+
+                <TextView
+                    android:id="@+id/tv_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="19dp"
+                    android:textColor="@color/white"
+                    android:elevation="3dp"
+                    android:text="This is just a preview, in order to access the course contents you need to purchase it."
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rv_videos"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+            <!--    <ImageButton-->
+            <!--        android:id="@+id/btn_bookmark"-->
+            <!--        style="?android:attr/borderlessButtonStyle"-->
+            <!--        android:layout_width="0dp"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:src="@drawable/ic_baseline_bookmark_border_24"-->
+            <!--        android:layout_marginTop="16dp"-->
+            <!--        app:layout_constraintEnd_toEndOf="parent"-->
+            <!--        app:layout_constraintStart_toEndOf="@+id/btn_buy"-->
+            <!--        app:layout_constraintTop_toBottomOf="@+id/description"-->
+            <!--        app:layout_constraintWidth_percent=".1" />-->
 
-    \
+            <Button
+                android:id="@+id/btn_buy"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_bg"
+                android:text="Buy Now"
+                android:textSize="11dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias=".5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <Button
+                android:id="@+id/btn_bookmark"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_bg"
+                android:text="Bookmark"
+                android:textSize="11dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias=".1"
+                app:layout_constraintStart_toEndOf="@+id/btn_buy"
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:padding="5dp"
+                android:text="  Course description this text is longer. Nunc at efficitur augue. Aenean et fringilla velit, et tempor urna. In hac habitasse platea dictumst. Curabitur maximus sit amet dolor id dapibus. Vivamus sodales eget augue id volutpat. Pellentesque varius, nulla nec rutrum auctor, urna turpis suscipit augue, euismod sagittis urna metus ut nisi."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

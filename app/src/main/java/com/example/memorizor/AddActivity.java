@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.memorizor.Adapter.VideoUploadAdapter;
@@ -41,6 +42,7 @@ public class AddActivity extends AppCompatActivity {
     private RecyclerView rv_videos_upload;
     private Button upload;
     private Button btn_pick_video;
+    private TextView tv_cover;
 
     private Uri imageUri;
     private Uri videoUri;
@@ -67,6 +69,7 @@ public class AddActivity extends AppCompatActivity {
         rv_videos_upload = findViewById(R.id.rv_videos_upload);
         upload = findViewById(R.id.btnUpload);
         btn_pick_video = findViewById(R.id.btn_pick_video);
+        tv_cover = findViewById(R.id.tv_cover);
 
         rv_videos_upload.setHasFixedSize(true);
         rv_videos_upload.setLayoutManager(new LinearLayoutManager(this));
@@ -101,6 +104,7 @@ public class AddActivity extends AppCompatActivity {
         if (requestCode == GET_IMAGE_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             imageUri = data.getData();
             image.setImageURI(imageUri);
+            tv_cover.setVisibility(View.INVISIBLE);
         }
         if (requestCode == GET_VIDEO_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             videoUri = data.getData();

@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -50,14 +51,24 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
         Bitmap thumbnailImage = retriever.getFrameAtTime(50000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
         holder.imageView.setImageBitmap(thumbnailImage);
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        holder.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 Intent intent = new Intent(mContext, VideoActivity.class);
                 intent.putExtra("videoId", mVideos.get(poz).getVideoId());
                 mContext.startActivity(intent);
+                return false;
             }
         });
+//
+//        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(mContext, VideoActivity.class);
+//                intent.putExtra("videoId", mVideos.get(poz).getVideoId());
+//                mContext.startActivity(intent);
+//            }
+//        });
 
     }
 

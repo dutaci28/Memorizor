@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,16 +43,14 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int poz = position;
-        InputStream is = null;
         try {
-            is = (InputStream) new URL(hashedCourses.get(poz).getImageUrl()).getContent();
-            Drawable d = Drawable.createFromStream(is, "preview");
-            holder.image_child.setImageDrawable(d);
-        } catch (IOException e) {
+            Picasso.get().load(hashedCourses.get(poz).getImageUrl()).placeholder(R.drawable.backgroudn).centerInside().fit().into(holder.image_child);
+//            InputStream is = (InputStream) new URL(hashedCourses.get(poz).getImageUrl()).getContent();
+//            Drawable d = Drawable.createFromStream(is, "preview");
+//            holder.image_child.setImageDrawable(d);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        Picasso.get().load(hashedCourses.get(poz).getImageUrl()).into(holder.image_child);
 
         holder.image_child.setOnClickListener(new View.OnClickListener() {
             @Override

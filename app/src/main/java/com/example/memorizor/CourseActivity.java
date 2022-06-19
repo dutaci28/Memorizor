@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -14,6 +17,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -57,6 +61,8 @@ public class CourseActivity extends AppCompatActivity {
     private Button btn_buy;
     private RecyclerView rv_videos;
     private RatingBar rating_bar;
+    private TextView tv_preview;
+    private ImageView iv_preview;
 
     private String courseId;
     private Course course;
@@ -84,6 +90,8 @@ public class CourseActivity extends AppCompatActivity {
         btn_buy = findViewById(R.id.btn_buy);
         rv_videos = findViewById(R.id.rv_videos);
         rating_bar = findViewById(R.id.rating_bar);
+        tv_preview = findViewById(R.id.tv_preview);
+        iv_preview = findViewById(R.id.iv_preview);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -96,14 +104,27 @@ public class CourseActivity extends AppCompatActivity {
         isPurchased(courseId, btn_buy);
         isBookmarked(courseId, btn_bookmark);
 
+        iv_preview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
         btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (btn_buy.getText().toString().equals("Buy Now")) {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
+//                    rv_videos.setVisibility(View.VISIBLE);
+                    tv_preview.setVisibility(View.GONE);
+                    iv_preview.setVisibility(View.GONE);
+
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
-
+//                    rv_videos.setVisibility(View.GONE);
+                    tv_preview.setVisibility(View.VISIBLE);
+                    iv_preview.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -119,6 +140,8 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
+        LayerDrawable stars = (LayerDrawable) rating_bar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
         rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -222,8 +245,15 @@ public class CourseActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(id).exists()) {
                     btn_buy.setText("Refund Course");
+//                    rv_videos.setVisibility(View.VISIBLE);
+                    tv_preview.setVisibility(View.GONE);
+                    iv_preview.setVisibility(View.GONE);
+
                 } else {
                     btn_buy.setText("Buy Now");
+//                    rv_videos.setVisibility(View.GONE);
+                    tv_preview.setVisibility(View.VISIBLE);
+                    iv_preview.setVisibility(View.VISIBLE);
                 }
 
             }

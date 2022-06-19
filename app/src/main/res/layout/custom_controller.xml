@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#80000000">
+    android:background="#90000000">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,14 +22,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/exo_play"
-            android:layout_marginEnd="16dp"
             android:src="@drawable/ic_play"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/exo_pause"
-            android:layout_marginEnd="16dp"
             android:src="@drawable/ic_pause"/>
 
         <ImageView
@@ -91,7 +89,7 @@
             android:layout_marginTop="-8dp"
             app:unplayed_color="#45424E"
             app:buffered_color="#95989F"
-            app:played_color="#4d269d"/>
+            app:played_color="#373737"/>
 
     </LinearLayout>
 
