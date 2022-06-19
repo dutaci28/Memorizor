@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,10 @@ import com.example.memorizor.StartActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,10 +54,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountFragment extends Fragment {
 
     private CircleImageView profileImage;
-    private TextView email;
-    private TextView fullname;
+    private EditText email;
+    private EditText fullname;
     private Button signout;
     private TextView tv_posted_courses;
+    private Button btn_modify;
+    private EditText et_password_reset;
 
     private RecyclerView rv_courses_account;
     private List<String> accountCourses = new ArrayList<>();
@@ -68,10 +75,12 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         profileImage = view.findViewById(R.id.image_profile);
-        email = view.findViewById(R.id.tv_email);
-        fullname = view.findViewById(R.id.tv_fullname);
+        email = view.findViewById(R.id.et_email);
+        fullname = view.findViewById(R.id.et_fullname);
         signout = view.findViewById(R.id.btn_signout);
         tv_posted_courses = view.findViewById(R.id.tv_posted_courses);
+        btn_modify = view.findViewById(R.id.btn_modify);
+        et_password_reset = view.findViewById(R.id.et_password_reset);
 
         readUser();
 
@@ -99,10 +108,10 @@ public class AccountFragment extends Fragment {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(getContext() , StartActivity.class));
+                                startActivity(new Intent(getContext(), StartActivity.class));
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -114,6 +123,61 @@ public class AccountFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        btn_modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(fullname.getText().toString()) || !TextUtils.isEmpty(email.getText().toString()) || et_password_reset.getText().toString().length() > 6) {
+                    String password = et_password_reset.getText().toString();
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    AuthCredential credential = EmailAuthProvider
+                            .getCredential(currentUser.getEmail(), password);
+                    user.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(getContext(), "User re-authenticated.", Toast.LENGTH_SHORT).show();
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
+
+                                                            String userId = user.getUid();
+                                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+
+                                                            HashMap<String, Object> map = new HashMap<>();
+                                                            map.put("name", fullname.getText().toString());
+                                                            map.put("email", email.getText().toString());
+                                                            map.put("id", userId);
+                                                            map.put("profileImageUrl", currentUser.getProfileImageUrl());
+
+                                                            ref.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Toast.makeText(getContext(), "Details updated", Toast.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        Toast.makeText(getContext(), "Details failed to update", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
+
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        Toast.makeText(getContext(), "Error re-authenticating.", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            });
+                }
             }
         });
 
@@ -131,7 +195,7 @@ public class AccountFragment extends Fragment {
                     currentUser = snap.getValue(User.class);
                     email.setText(currentUser.getEmail());
                     fullname.setText(currentUser.getName());
-                    if(currentUser.getProfileImageUrl().equals("")){
+                    if (currentUser.getProfileImageUrl().equals("")) {
                         Toast.makeText(getContext(), "You can upload a profile image by clicking on the circle view.", Toast.LENGTH_SHORT).show();
                     } else {
                         Picasso.get().load(currentUser.getProfileImageUrl()).into(profileImage);
@@ -174,10 +238,10 @@ public class AccountFragment extends Fragment {
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
-                    HashMap<String , Object> map = new HashMap<>();
-                    map.put("name" , currentUser.getName());
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("name", currentUser.getName());
                     map.put("email", currentUser.getEmail());
-                    map.put("id" , userId);
+                    map.put("id", userId);
                     map.put("profileImageUrl", imageUrl);
 
                     ref.setValue(map);
@@ -186,15 +250,16 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    private void populateAccountCourses(){
+    private void populateAccountCourses() {
         FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(FirebaseAuth.getInstance().getCurrentUser().getUid()).endAt(FirebaseAuth.getInstance().getCurrentUser().getUid() + "\uf8ff").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 accountCourses.clear();
-                for(DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     accountCourses.add(snap.getKey());
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -206,9 +271,9 @@ public class AccountFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mCourses.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    for(String s : accountCourses){
+                    for (String s : accountCourses) {
                         Course course = snap.getValue(Course.class);
-                        if(course.getCourseId().equals(s)){
+                        if (course.getCourseId().equals(s)) {
                             mCourses.add(course);
                         }
                     }
@@ -216,6 +281,7 @@ public class AccountFragment extends Fragment {
                 courseAdapter.notifyDataSetChanged();
                 tv_posted_courses.setText("Published courses (" + mCourses.size() + ")");
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }

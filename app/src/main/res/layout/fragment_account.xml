@@ -18,7 +18,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/backgroudn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".3"
+        app:layout_constraintHeight_percent=".5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,57 +33,102 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2" />
 
-    <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="email@email.com"
-        android:textSize="20dp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_fullname"
-        app:layout_constraintVertical_bias="0" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_fullname"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Full Name"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textStyle="italic"-->
+<!--        android:textColor="@color/white"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/image_profile"-->
+<!--        app:layout_constraintVertical_bias="0" />-->
 
-    <TextView
-        android:id="@+id/tv_fullname"
+    <EditText
+        android:id="@+id/et_fullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Full Name"
         android:textSize="20dp"
         android:textStyle="italic"
-        android:textColor="@color/white"
+        android:padding="10dp"
+        android:background="@drawable/et_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_profile"
+        app:layout_constraintVertical_bias="0"
+        />
+
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email@email.com"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:background="@drawable/et_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_fullname"
         app:layout_constraintVertical_bias="0" />
 
+    <EditText
+        android:id="@+id/et_password_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Re-enter password"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:background="@drawable/et_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_email"
+        app:layout_constraintVertical_bias="0" />
+
+
+    <!--    <TextView-->
+<!--        android:id="@+id/tv_email"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="email@email.com"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_fullname"-->
+<!--        app:layout_constraintVertical_bias="0" />-->
+<!--    -->
     <Button
         android:id="@+id/btn_signout"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_bg"
         android:text="Sign out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/button_bg"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.07" />
 
     <Button
         android:id="@+id/btn_modify"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:text="Edit"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_bg"
+        android:text="Save changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        android:background="@drawable/button_bg"
         app:layout_constraintStart_toEndOf="@+id/btn_signout"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.07" />
 
     <TextView

@@ -57,7 +57,6 @@ public class CourseActivity extends AppCompatActivity {
     private ImageView iv_photo;
     private TextView tv_title;
     private TextView tv_description;
-//    private ImageButton btn_bookmark;
     private Button btn_bookmark;
     private Button btn_buy;
     private RecyclerView rv_videos;
@@ -65,10 +64,12 @@ public class CourseActivity extends AppCompatActivity {
     private TextView tv_preview;
     private ImageView iv_preview;
     private ConstraintLayout bottom_constraint_layout;
+    private TextView tv_ratings_number_course;
 
     private String courseId;
     private Course course;
     private Object lock = new Object();
+    int noRatings = 0;
 
     private VideoAdapter videoAdapter;
 
@@ -95,6 +96,7 @@ public class CourseActivity extends AppCompatActivity {
         tv_preview = findViewById(R.id.tv_preview);
         iv_preview = findViewById(R.id.iv_preview);
         bottom_constraint_layout = findViewById(R.id.bottom_constraint_layout);
+        tv_ratings_number_course = findViewById(R.id.tv_ratings_number_course);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -119,13 +121,11 @@ public class CourseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (btn_buy.getText().toString().equals("Buy Now")) {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
-//                    rv_videos.setVisibility(View.VISIBLE);
                     tv_preview.setVisibility(View.GONE);
                     iv_preview.setVisibility(View.GONE);
 
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
-//                    rv_videos.setVisibility(View.GONE);
                     tv_preview.setVisibility(View.VISIBLE);
                     iv_preview.setVisibility(View.VISIBLE);
                 }
@@ -145,24 +145,7 @@ public class CourseActivity extends AppCompatActivity {
 
         LayerDrawable stars = (LayerDrawable) rating_bar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
-        rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                int ratingValue = (int) rating_bar.getRating();
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
-                String ratingId = ref.push().getKey();
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("courseId", courseId);
-                map.put("ratingId", ratingId);
-                map.put("value", ratingValue);
-
-                ref.child(ratingId).setValue(map);
-
-                //problema cu rating, de fiecare data cand trimiti un rating nou se trimite si ratingul deja afisat ( media celor existente )
-                //fix posibil creare o bara de rating doar pt acordat ratinguri si una doar pt afisat
-            }
-        });
     }
 
     private void readCourse() {
@@ -194,22 +177,38 @@ public class CourseActivity extends AppCompatActivity {
         query2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ratings.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Rating rating = snap.getValue(Rating.class);
                     ratings.add(rating);
                 }
 
+                noRatings = ratings.size();
                 int finalRating = 0;
-                int noRatings = 0;
-                for (Rating r : ratings) {
-                    noRatings++;
-                    finalRating += r.getValue();
-
-                }
                 if (noRatings > 0) {
                     finalRating /= noRatings;
                 }
-                rating_bar.setRating((int)finalRating);
+                tv_ratings_number_course.setText("(" + noRatings + " ratings)");
+
+                rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        int ratingValue = (int) rating_bar.getRating();
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+                        String ratingId = ref.push().getKey();
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("courseId", courseId);
+                        map.put("ratingId", ratingId);
+                        map.put("value", ratingValue);
+
+                        ref.child(ratingId).setValue(map);
+                        rating_bar.setIsIndicator(true);
+
+                        //problema cu rating, de fiecare data cand trimiti un rating nou se trimite si ratingul deja afisat ( media celor existente )
+                        //fix posibil creare o bara de rating doar pt acordat ratinguri si una doar pt afisat
+                    }
+                });
             }
 
             @Override
@@ -230,7 +229,6 @@ public class CourseActivity extends AppCompatActivity {
                     mVideoUris.add(Uri.parse(video.getVideoUrl()));
                 }
                 videoAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -247,13 +245,11 @@ public class CourseActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(id).exists()) {
                     btn_buy.setText("Refund Course");
-//                    rv_videos.setVisibility(View.VISIBLE);
                     tv_preview.setVisibility(View.GONE);
                     iv_preview.setVisibility(View.GONE);
 
                 } else {
                     btn_buy.setText("Buy Now");
-//                    rv_videos.setVisibility(View.GONE);
                     tv_preview.setVisibility(View.VISIBLE);
                     iv_preview.setVisibility(View.VISIBLE);
                 }

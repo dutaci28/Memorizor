@@ -45,6 +45,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private Context mContext;
     private List<Course> mCourses;
     private boolean isFragment;
+    private int noRatings = 0;
 
     private FirebaseUser firebaseUser;
 
@@ -87,7 +88,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         Course course = mCourses.get(position);
 
-        LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
+        LayerDrawable stars = (LayerDrawable) holder.rating_bar_preview.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
 
         Query query2 = FirebaseDatabase.getInstance().getReference().child("Ratings")
@@ -97,13 +98,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         query2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ratings.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Rating rating = snap.getValue(Rating.class);
                     ratings.add(rating);
                 }
 
                 int finalRating = 0;
-                int noRatings = 0;
+                noRatings = 0;
                 for (Rating r : ratings) {
                     noRatings++;
                     finalRating += r.getValue();
@@ -112,7 +114,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 if (noRatings > 0) {
                     finalRating /= noRatings;
                 }
-                holder.ratingBar.setRating((int)finalRating);
+                holder.tv_ratings_number.setText("(" + noRatings + " ratings)");
+                holder.rating_bar_preview.setRating((int)finalRating);
             }
 
             @Override
@@ -187,7 +190,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public TextView price;
         public ImageView image;
         public ImageButton btn_bookmark;
-        public RatingBar ratingBar;
+        public RatingBar rating_bar_preview;
+        public TextView tv_ratings_number;
 
         public CardView cardView;
 
@@ -200,7 +204,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             price = itemView.findViewById(R.id.price);
             cardView = itemView.findViewById(R.id.cardView);
             btn_bookmark = itemView.findViewById(R.id.btn_bookmark);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+            rating_bar_preview = itemView.findViewById(R.id.rating_bar_preview);
+            tv_ratings_number = itemView.findViewById(R.id.tv_ratings_number);
         }
     }
 

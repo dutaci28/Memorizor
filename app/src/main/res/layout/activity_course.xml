@@ -26,7 +26,8 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_view_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
+                android:maxHeight="250dp"
                 android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +58,7 @@
                 android:textColor="@color/black"
                 android:textSize="16dp"
                 android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_view_image" />
@@ -65,18 +67,30 @@
                 android:id="@+id/rating_bar"
                 android:layout_width="246dp"
                 android:layout_height="41dp"
-                android:background="#FFFFFF"
                 android:numStars="5"
                 android:scaleX=".5"
                 android:scaleY=".5"
                 android:stepSize="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.09"
+                app:layout_constraintVertical_bias="0.06"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_view_image" />
+
+            <TextView
+                android:id="@+id/tv_ratings_number_course"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0 ratings)"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.42"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_view_image"
-                app:layout_constraintVertical_bias="0.04" />
-
+                app:layout_constraintVertical_bias="0.06" />
 
             <TextView
                 android:id="@+id/description"
@@ -143,6 +157,7 @@
                 android:id="@+id/bottom_constraint_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:minHeight="300dp"
                 android:elevation="-10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
