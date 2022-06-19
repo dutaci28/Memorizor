@@ -34,8 +34,6 @@ public class RegisterTabFragment extends Fragment {
     private EditText email;
     private EditText password;
     private Button register;
-    private TextView member;
-    float v = 0;
 
     private DatabaseReference mRootRef;
     private FirebaseAuth mAuth;
@@ -51,7 +49,6 @@ public class RegisterTabFragment extends Fragment {
         email=root.findViewById(R.id.et_register_email);
         password = root.findViewById(R.id.et_register_password);
         register = root.findViewById(R.id.btn_register_signup);
-        member = root.findViewById(R.id.tv_register_member);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -63,8 +60,7 @@ public class RegisterTabFragment extends Fragment {
                 String txtName = name.getText().toString();
                 String txtEmail = email.getText().toString();
                 String txtPassword = password.getText().toString();
-                if (TextUtils.isEmpty(txtName)
-                        || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)){
+                if (TextUtils.isEmpty(txtName) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)){
                     Toast.makeText(getContext(), "Empty credentials!", Toast.LENGTH_SHORT).show();
                 } else if (txtPassword.length() < 6){
                     Toast.makeText(getContext(), "Password too short!", Toast.LENGTH_SHORT).show();
@@ -96,6 +92,8 @@ public class RegisterTabFragment extends Fragment {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             getActivity().finish();
+                        } else {
+                            Toast.makeText(getContext(), "User already exists", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

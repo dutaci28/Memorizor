@@ -34,7 +34,6 @@ public class LoginTabFragment extends Fragment {
     private EditText email;
     private EditText password;
     private Button login;
-    private TextView notMember;
 
     private FirebaseAuth mAuth;
 
@@ -46,22 +45,18 @@ public class LoginTabFragment extends Fragment {
         email=root.findViewById(R.id.et_login_email);
         password = root.findViewById(R.id.et_login_password);
         login = root.findViewById(R.id.btn_login_login);
-        notMember = root.findViewById(R.id.tv_login_notmemeber);
 
         email.setTranslationX(800);
         password.setTranslationX(800);
         login.setTranslationX(800);
-        notMember.setTranslationX(800);
 
         email.setAlpha(0);
         password.setAlpha(0);
         login.setAlpha(0);
-        notMember.setAlpha(0);
 
-        email.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
-        password.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
-        login.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
-        notMember.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(700).start();
+        email.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(100).start();
+        password.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(200).start();
+        login.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -72,12 +67,11 @@ public class LoginTabFragment extends Fragment {
                 String txt_password = password.getText().toString();
 
                 if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
-                    Toast.makeText(getContext(), "Empty Credentials!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
                 } else {
 
                     Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
                             .orderByChild("email").startAt(email.getText().toString()).endAt(email.getText().toString() + "\uf8ff");
-
 
                     query1.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -92,7 +86,7 @@ public class LoginTabFragment extends Fragment {
                             }
 
                             if(exists == false){
-                                Toast.makeText(getContext(), "User does not exist!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "User does not exist", Toast.LENGTH_SHORT).show();
                             } else {
                                 loginUser(txt_email , txt_password);
                             }
@@ -116,11 +110,12 @@ public class LoginTabFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-
                     Intent intent = new Intent(getContext() , MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     getActivity().finish();
+                } else {
+                    Toast.makeText(getContext(), "Password is incorrect", Toast.LENGTH_SHORT).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
