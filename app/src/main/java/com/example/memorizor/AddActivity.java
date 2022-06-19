@@ -71,6 +71,21 @@ public class AddActivity extends AppCompatActivity {
         btn_pick_video = findViewById(R.id.btn_pick_video);
         tv_cover = findViewById(R.id.tv_cover);
 
+        image.setTranslationY(-800);
+        image.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(100).start();
+
+        title.setTranslationY(-800);
+        title.setAlpha(0);
+        title.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(100).start();
+
+        description.setTranslationY(-800);
+        description.setAlpha(0);
+        description.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(200).start();
+
+        price.setTranslationY(-800);
+        price.setAlpha(0);
+        price.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(300).start();
+
         rv_videos_upload.setHasFixedSize(true);
         rv_videos_upload.setLayoutManager(new LinearLayoutManager(this));
         videoUploadAdapter = new VideoUploadAdapter(this, mVideoUploadUris);

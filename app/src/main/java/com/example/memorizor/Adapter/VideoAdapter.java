@@ -51,6 +51,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
         Bitmap thumbnailImage = retriever.getFrameAtTime(50000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
         holder.imageView.setImageBitmap(thumbnailImage);
 
+        holder.imageView.setTranslationY(-800);
+        holder.imageView.animate().translationY(0).alpha(1).setDuration(300).setStartDelay(300 + 100*position).start();
+
         holder.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

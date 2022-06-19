@@ -87,9 +87,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         Course course = mCourses.get(position);
 
-
         LayerDrawable stars = (LayerDrawable) holder.ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+
         Query query2 = FirebaseDatabase.getInstance().getReference().child("Ratings")
                 .orderByChild("courseId").startAt(course.getCourseId()).endAt(course.getCourseId() + "\uf8ff");
 
@@ -123,7 +123,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         holder.title.setText(course.getTitle());
         holder.price.setText("$" + course.getPrice());
-        Picasso.get().load(course.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(holder.image);
+        Picasso.get().load(course.getImageUrl()).placeholder(R.drawable.backgroudn).into(holder.image);
 
         isBookmarked(course.getCourseId(), holder.btn_bookmark);
 
@@ -146,6 +146,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 mContext.startActivity(intent);
             }
         });
+
+        holder.cardView.setTranslationY(-800);
+        holder.cardView.setAlpha(0);
+        holder.cardView.animate().translationY(0).alpha(1).setDuration(300).setStartDelay(position*100).start();
 
     }
 

@@ -46,6 +46,10 @@ public class BookmarksFragment extends Fragment {
         rv_courses_bookmarked.setLayoutManager(new LinearLayoutManager(getContext()));
         tv_empty = view.findViewById(R.id.tv_empty);
 
+        tv_empty.setTranslationX(-800);
+        tv_empty.setAlpha(0);
+        tv_empty.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(50).start();
+
         mCourses = new ArrayList<>();
         courseAdapter = new CourseAdapter(getContext(), mCourses, true);
         rv_courses_bookmarked.setAdapter(courseAdapter);
@@ -53,8 +57,6 @@ public class BookmarksFragment extends Fragment {
         populateBookmarkedCourses();
         return view;
     }
-
-
 
     private void populateBookmarkedCourses(){
         FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Bookmarked").addValueEventListener(new ValueEventListener() {

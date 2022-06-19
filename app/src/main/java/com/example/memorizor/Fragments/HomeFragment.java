@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.memorizor.Adapter.ParentAdapter;
 import com.example.memorizor.Model.Course;
@@ -30,6 +32,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView rv_parent_items;
     private List<String> hashTags = new ArrayList<>();
     private ParentAdapter parentAdapter;
+    private TextView tv_browse;
+    private ImageView imageView;
 
     private Map<String, List<Course>> hashedCoursesMap = new HashMap<>();
 
@@ -42,6 +46,12 @@ public class HomeFragment extends Fragment {
         rv_parent_items.setLayoutManager(new LinearLayoutManager(getContext()));
         parentAdapter = new ParentAdapter(getContext(), hashedCoursesMap);
         rv_parent_items.setAdapter(parentAdapter);
+        tv_browse = view.findViewById(R.id.tv_browse);
+        imageView = view.findViewById(R.id.imageView);
+
+        tv_browse.setTranslationY(-800);
+        tv_browse.setAlpha(0);
+        tv_browse.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(100).start();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Hashtags");
         reference.addValueEventListener(new ValueEventListener() {

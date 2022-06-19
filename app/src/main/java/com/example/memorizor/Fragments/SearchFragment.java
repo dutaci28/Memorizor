@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchFragment extends Fragment {
 
@@ -95,7 +96,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void searchCourse(String s) {
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -103,7 +103,7 @@ public class SearchFragment extends Fragment {
                 mCourses.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Course course = snap.getValue(Course.class);
-                    if(course.getTitle().contains(s) || course.getDescription().contains(s)){
+                    if(course.getTitle().toLowerCase().contains(s.toLowerCase()) || course.getDescription().toLowerCase().contains(s.toLowerCase())){
                         mCourses.add(course);
                     }
                     courseAdapter.notifyDataSetChanged();

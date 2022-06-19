@@ -50,10 +50,18 @@ public class ParentAdapter extends RecyclerView.Adapter<ParentAdapter.ViewHolder
         String key = hashedCoursesMap.keySet().toArray()[poz].toString();
 
         holder.tv_hashtag.setText("#" + key);
+        holder.tv_hashtag.setTranslationX(-800);
+        holder.tv_hashtag.setAlpha(0);
+        holder.tv_hashtag.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(position*100).start();
+
         holder.rv_parent.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
         childAdapter = new ChildAdapter(mContext, hashedCoursesMap.get(key));
         holder.rv_parent.setAdapter(childAdapter);
         childAdapter.notifyDataSetChanged();
+
+        holder.rv_parent.setTranslationX(800);
+        holder.rv_parent.setAlpha(0);
+        holder.rv_parent.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300 + position*100).start();
     }
 
     @Override

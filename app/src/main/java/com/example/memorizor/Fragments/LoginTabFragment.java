@@ -35,7 +35,6 @@ public class LoginTabFragment extends Fragment {
     private EditText password;
     private Button login;
     private TextView notMember;
-    float v = 0;
 
     private FirebaseAuth mAuth;
 
@@ -54,10 +53,10 @@ public class LoginTabFragment extends Fragment {
         login.setTranslationX(800);
         notMember.setTranslationX(800);
 
-        email.setAlpha(v);
-        password.setAlpha(v);
-        login.setAlpha(v);
-        notMember.setAlpha(v);
+        email.setAlpha(0);
+        password.setAlpha(0);
+        login.setAlpha(0);
+        notMember.setAlpha(0);
 
         email.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
         password.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();

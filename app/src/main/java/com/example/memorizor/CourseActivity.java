@@ -2,6 +2,7 @@ package com.example.memorizor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,6 +64,7 @@ public class CourseActivity extends AppCompatActivity {
     private RatingBar rating_bar;
     private TextView tv_preview;
     private ImageView iv_preview;
+    private ConstraintLayout bottom_constraint_layout;
 
     private String courseId;
     private Course course;
@@ -92,6 +94,7 @@ public class CourseActivity extends AppCompatActivity {
         rating_bar = findViewById(R.id.rating_bar);
         tv_preview = findViewById(R.id.tv_preview);
         iv_preview = findViewById(R.id.iv_preview);
+        bottom_constraint_layout = findViewById(R.id.bottom_constraint_layout);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -161,7 +164,6 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void readCourse() {
 
