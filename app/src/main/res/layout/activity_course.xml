@@ -23,18 +23,29 @@
             android:minHeight="750dp"
             >
 
-            <ImageView
-                android:id="@+id/image"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_image"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon"
-                android:clickable="true"
-
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon"
+                    android:clickable="true"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/title"
@@ -45,11 +56,11 @@
                 android:maxLines="1"
                 android:text="Course Title"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="16dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image" />
+                app:layout_constraintTop_toBottomOf="@+id/card_view_image" />
 
             <RatingBar
                 android:id="@+id/rating_bar"
@@ -64,8 +75,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image"
-                app:layout_constraintVertical_bias="0.06" />
+                app:layout_constraintTop_toBottomOf="@+id/card_view_image"
+                app:layout_constraintVertical_bias="0.04" />
+
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="  Course description this text is longer. Nunc at efficitur augue. Aenean et fringilla velit, et tempor urna. In hac habitasse platea dictumst. Curabitur maximus sit amet dolor id dapibus. Vivamus sodales eget augue id volutpat. Pellentesque varius, nulla nec rutrum auctor, urna turpis suscipit augue, euismod sagittis urna metus ut nisi."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
 
             <TextView
                 android:id="@+id/tv_price"
@@ -78,63 +102,6 @@
                 app:layout_constraintHorizontal_bias=".1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_buy">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_videos"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/iv_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="#90000000"
-                    android:elevation="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/rv_videos"
-                    app:layout_constraintStart_toStartOf="@+id/rv_videos"
-                    app:layout_constraintTop_toTopOf="@+id/rv_videos" />
-
-                <TextView
-                    android:id="@+id/tv_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:textSize="19dp"
-                    android:textColor="@color/white"
-                    android:elevation="3dp"
-                    android:text="This is just a preview, in order to access the course contents you need to purchase it."
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/rv_videos"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <!--    <ImageButton-->
-            <!--        android:id="@+id/btn_bookmark"-->
-            <!--        style="?android:attr/borderlessButtonStyle"-->
-            <!--        android:layout_width="0dp"-->
-            <!--        android:layout_height="wrap_content"-->
-            <!--        android:src="@drawable/ic_baseline_bookmark_border_24"-->
-            <!--        android:layout_marginTop="16dp"-->
-            <!--        app:layout_constraintEnd_toEndOf="parent"-->
-            <!--        app:layout_constraintStart_toEndOf="@+id/btn_buy"-->
-            <!--        app:layout_constraintTop_toBottomOf="@+id/description"-->
-            <!--        app:layout_constraintWidth_percent=".1" />-->
 
             <Button
                 android:id="@+id/btn_buy"
@@ -164,16 +131,59 @@
                 app:layout_constraintStart_toEndOf="@+id/btn_buy"
                 app:layout_constraintTop_toBottomOf="@+id/description" />
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="367dp"
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:padding="5dp"
-                android:text="  Course description this text is longer. Nunc at efficitur augue. Aenean et fringilla velit, et tempor urna. In hac habitasse platea dictumst. Curabitur maximus sit amet dolor id dapibus. Vivamus sodales eget augue id volutpat. Pellentesque varius, nulla nec rutrum auctor, urna turpis suscipit augue, euismod sagittis urna metus ut nisi."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_buy" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:elevation="-10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/top_shadow_gradient"
+                app:layout_constraintTop_toBottomOf="@+id/divider">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_videos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="#90000000"
+                    android:elevation="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/rv_videos"
+                    app:layout_constraintStart_toStartOf="@+id/rv_videos"
+                    app:layout_constraintTop_toTopOf="@+id/rv_videos" />
+
+                <TextView
+                    android:id="@+id/tv_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="19dp"
+                    android:textColor="@color/white"
+                    android:elevation="3dp"
+                    android:text="This is just a preview, in order to access the course contents you need to buy it."
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rv_videos"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

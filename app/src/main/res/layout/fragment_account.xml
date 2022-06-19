@@ -87,11 +87,11 @@
         app:layout_constraintVertical_bias="0.07" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_posted_courses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Posted courses"
-        android:textSize="20dp"
+        android:text="Published courses"
+        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,12 +99,14 @@
         app:layout_constraintVertical_bias="0.03" />
 
     <ScrollView
+        android:background="@drawable/top_shadow_gradient"
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/tv_posted_courses"
         tools:layout_editor_absoluteX="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -118,10 +120,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     </ScrollView>
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

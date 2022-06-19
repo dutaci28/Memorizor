@@ -52,6 +52,7 @@ public class AccountFragment extends Fragment {
     private TextView email;
     private TextView fullname;
     private Button signout;
+    private TextView tv_posted_courses;
 
     private RecyclerView rv_courses_account;
     private List<String> accountCourses = new ArrayList<>();
@@ -70,6 +71,7 @@ public class AccountFragment extends Fragment {
         email = view.findViewById(R.id.tv_email);
         fullname = view.findViewById(R.id.tv_fullname);
         signout = view.findViewById(R.id.btn_signout);
+        tv_posted_courses = view.findViewById(R.id.tv_posted_courses);
 
         readUser();
 
@@ -212,10 +214,12 @@ public class AccountFragment extends Fragment {
                     }
                 }
                 courseAdapter.notifyDataSetChanged();
+                tv_posted_courses.setText("Published courses (" + mCourses.size() + ")");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
     }
 }

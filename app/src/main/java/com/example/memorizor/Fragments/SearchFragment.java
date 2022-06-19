@@ -95,23 +95,23 @@ public class SearchFragment extends Fragment {
     }
 
     private void searchCourse(String s) {
-        Query query = FirebaseDatabase.getInstance().getReference().child("Courses")
-                .orderByChild("title").startAt(s).endAt(s + "\uf8ff");
 
-        query.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Courses");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mCourses.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Course course = snap.getValue(Course.class);
-                    mCourses.add(course);
+                    if(course.getTitle().contains(s) || course.getDescription().contains(s)){
+                        mCourses.add(course);
+                    }
+                    courseAdapter.notifyDataSetChanged();
                 }
-                courseAdapter.notifyDataSetChanged();
-            }
 
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
