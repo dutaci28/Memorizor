@@ -43,11 +43,13 @@
 
         <EditText
             android:id="@+id/et_fullname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent=".8"
             android:layout_height="wrap_content"
             android:background="@drawable/et_bg_1"
             android:padding="10dp"
             android:text="Full Name"
+            android:layout_margin="5dp"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="italic"
@@ -59,12 +61,14 @@
 
         <EditText
             android:id="@+id/et_email"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent=".8"
             android:layout_height="wrap_content"
             android:background="@drawable/et_bg_1"
             android:padding="10dp"
             android:text="email@email.com"
             android:textColor="@color/black"
+            android:layout_margin="5dp"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,13 +78,15 @@
 
         <EditText
             android:id="@+id/et_password_reset"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent=".8"
             android:layout_height="wrap_content"
             android:background="@drawable/et_bg_1"
             android:hint="Re-enter password"
             android:padding="10dp"
             android:textColorHint="@color/black"
             android:textSize="20dp"
+            android:layout_margin="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,15 +95,16 @@
 
         <Button
             android:id="@+id/btn_modify"
-            android:layout_width="130dp"
-            android:layout_height="60dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
             android:text="Save changes"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_password_reset"
-            app:layout_constraintVertical_bias="0.07" />
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintVertical_bias="0.2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -51,6 +51,21 @@ public class AccountSettingsActivity extends AppCompatActivity {
         btn_modify = findViewById(R.id.btn_modify);
         et_password_reset = findViewById(R.id.et_password_reset);
 
+        fullname.setTranslationX(800);
+        email.setTranslationX(800);
+        et_password_reset.setTranslationX(800);
+        btn_modify.setTranslationX(800);
+
+        fullname.setAlpha(0);
+        email.setAlpha(0);
+        et_password_reset.setAlpha(0);
+        btn_modify.setAlpha(0);
+
+        fullname.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(100).start();
+        email.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(200).start();
+        et_password_reset.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(300).start();
+        btn_modify.animate().translationX(0).alpha(1).setDuration(500).setStartDelay(400).start();
+
         readUser();
 
         btn_modify.setOnClickListener(new View.OnClickListener() {

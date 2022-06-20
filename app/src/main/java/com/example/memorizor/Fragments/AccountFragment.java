@@ -66,7 +66,6 @@ public class AccountFragment extends Fragment {
     private CircleImageView profileImage;
     private TextView email;
     private TextView fullname;
-    private TextView tv_posted_courses;
     private DrawerLayout drawer_layout;
     private FloatingActionButton fab_settings;
     private NavigationView account_navigation_view;
@@ -87,7 +86,6 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.image_profile);
         email = view.findViewById(R.id.tv_email);
         fullname = view.findViewById(R.id.tv_fullname);
-        tv_posted_courses = view.findViewById(R.id.tv_posted_courses);
         drawer_layout = view.findViewById(R.id.drawer_layout);
         fab_settings = view.findViewById(R.id.fab_settings);
         account_navigation_view = view.findViewById(R.id.account_navigation_view);
@@ -259,7 +257,6 @@ public class AccountFragment extends Fragment {
                     }
                 }
                 courseAdapter.notifyDataSetChanged();
-                tv_posted_courses.setText("Published courses (" + mCourses.size() + ")");
             }
 
             @Override
