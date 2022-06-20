@@ -69,6 +69,7 @@ public class CourseActivity extends AppCompatActivity {
     private String courseId;
     private Course course;
     private Object lock = new Object();
+    boolean rated = false;
     int noRatings = 0;
 
     private VideoAdapter videoAdapter;
@@ -183,32 +184,42 @@ public class CourseActivity extends AppCompatActivity {
                     ratings.add(rating);
                 }
 
-                noRatings = ratings.size();
                 int finalRating = 0;
+                for(Rating r : ratings){
+                    finalRating+= r.getValue();
+                    if(r.getUserId().equals(firebaseUser.getUid())){
+                        rating_bar.setIsIndicator(true);
+                        rated = true;
+                    }
+                }
+
+                noRatings = ratings.size();
                 if (noRatings > 0) {
                     finalRating /= noRatings;
                 }
                 tv_ratings_number_course.setText("(" + noRatings + " ratings)");
 
-                rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        int ratingValue = (int) rating_bar.getRating();
+                if(rated){
+                    rating_bar.setRating(finalRating);
+                } else {
+                    rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                        @Override
+                        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                            int ratingValue = (int) rating_bar.getRating();
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
-                        String ratingId = ref.push().getKey();
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("courseId", courseId);
-                        map.put("ratingId", ratingId);
-                        map.put("value", ratingValue);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+                            String ratingId = ref.push().getKey();
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("courseId", courseId);
+                            map.put("ratingId", ratingId);
+                            map.put("userId",firebaseUser.getUid());
+                            map.put("value", ratingValue);
 
-                        ref.child(ratingId).setValue(map);
-                        rating_bar.setIsIndicator(true);
-
-                        //problema cu rating, de fiecare data cand trimiti un rating nou se trimite si ratingul deja afisat ( media celor existente )
-                        //fix posibil creare o bara de rating doar pt acordat ratinguri si una doar pt afisat
-                    }
-                });
+                            ref.child(ratingId).setValue(map);
+                            rating_bar.setIsIndicator(true);
+                        }
+                    });
+                }
             }
 
             @Override

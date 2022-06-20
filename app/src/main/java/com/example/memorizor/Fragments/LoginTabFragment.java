@@ -1,5 +1,6 @@
 package com.example.memorizor.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,6 +90,7 @@ public class LoginTabFragment extends Fragment {
                                 Toast.makeText(getContext(), "User does not exist", Toast.LENGTH_SHORT).show();
                             } else {
                                 loginUser(txt_email , txt_password);
+
                             }
                         }
 
@@ -106,21 +108,28 @@ public class LoginTabFragment extends Fragment {
 
     private void loginUser(String email, String password) {
 
+        ProgressDialog pd = new ProgressDialog(getContext());
+        pd.setMessage("Logging in");
+        pd.show();
+
         mAuth.signInWithEmailAndPassword(email , password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     Intent intent = new Intent(getContext() , MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    pd.dismiss();
                     startActivity(intent);
                     getActivity().finish();
                 } else {
                     Toast.makeText(getContext(), "Password is incorrect", Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

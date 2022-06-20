@@ -1,19 +1,31 @@
 package com.example.memorizor;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.memorizor.Adapter.LoginAdapter;
+import com.example.memorizor.Model.User;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class StartActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
+
+    User currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,8 +55,38 @@ public class StartActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
-            startActivity(new Intent(StartActivity.this , MainActivity.class));
-            finish();
+
+            ProgressDialog pd = new ProgressDialog(this);
+            pd.setMessage("Logging in");
+            pd.show();
+
+            Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
+                    .orderByChild("id").startAt(FirebaseAuth.getInstance().getCurrentUser().getUid()).endAt(FirebaseAuth.getInstance().getCurrentUser().getUid() + "\uf8ff");
+
+            query1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        currentUser = snap.getValue(User.class);
+                        if(currentUser.getPermissions().equals("user")){
+                            pd.dismiss();
+                            startActivity(new Intent(StartActivity.this , MainActivity.class));
+                            finish();
+                        }
+                        if(currentUser.getPermissions().equals("moderator")){
+                            pd.dismiss();
+                            //REDIRECTARE CU INTENT CATRE MAIN ACTIVITY PT MODERATOR
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
         }
     }
 }

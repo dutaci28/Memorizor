@@ -3,15 +3,10 @@ package com.example.memorizor.Model;
 public class Rating {
     private String courseId;
     private String ratingId;
+    private String userId;
     private int value;
 
     public Rating() {
-    }
-
-    public Rating(String courseId, String ratingId, int value) {
-        this.courseId = courseId;
-        this.ratingId = ratingId;
-        this.value = value;
     }
 
     public String getCourseId() {
@@ -30,11 +25,26 @@ public class Rating {
         this.ratingId = ratingId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public int getValue() {
         return value;
     }
 
     public void setValue(int value) {
+        this.value = value;
+    }
+
+    public Rating(String courseId, String ratingId, String userId, int value) {
+        this.courseId = courseId;
+        this.ratingId = ratingId;
+        this.userId = userId;
         this.value = value;
     }
 }

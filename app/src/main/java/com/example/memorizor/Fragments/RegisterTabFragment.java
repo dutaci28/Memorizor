@@ -82,6 +82,7 @@ public class RegisterTabFragment extends Fragment {
                 map.put("name" , name);
                 map.put("email", email);
                 map.put("id" , mAuth.getCurrentUser().getUid());
+                map.put("permissions", "user");
                 map.put("profileImageUrl", "");
                 mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

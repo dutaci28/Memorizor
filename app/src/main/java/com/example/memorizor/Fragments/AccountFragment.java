@@ -139,38 +139,39 @@ public class AccountFragment extends Fragment {
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(getContext(), "User re-authenticated.", Toast.LENGTH_SHORT).show();
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()) {
-                                                            Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
 
-                                                            String userId = user.getUid();
-                                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+                                                    String userId = user.getUid();
+                                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
-                                                            HashMap<String, Object> map = new HashMap<>();
-                                                            map.put("name", fullname.getText().toString());
-                                                            map.put("email", email.getText().toString());
-                                                            map.put("id", userId);
-                                                            map.put("profileImageUrl", currentUser.getProfileImageUrl());
+                                                    HashMap<String, Object> map = new HashMap<>();
+                                                    map.put("name", fullname.getText().toString());
+                                                    map.put("email", email.getText().toString());
+                                                    map.put("id", userId);
+                                                    map.put("permissions", "user");
+                                                    map.put("profileImageUrl", currentUser.getProfileImageUrl());
 
-                                                            ref.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        Toast.makeText(getContext(), "Details updated", Toast.LENGTH_SHORT).show();
-                                                                    } else {
-                                                                        Toast.makeText(getContext(), "Details failed to update", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                }
-                                                            });
-
+                                                    ref.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Toast.makeText(getContext(), "Details updated", Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                Toast.makeText(getContext(), "Details failed to update", Toast.LENGTH_SHORT).show();
+                                                            }
                                                         }
-                                                    }
-                                                });
+                                                    });
+
+                                                }
+                                            }
+                                        });
                                     } else {
                                         Toast.makeText(getContext(), "Error re-authenticating.", Toast.LENGTH_SHORT).show();
                                     }

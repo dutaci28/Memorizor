@@ -47,6 +47,19 @@
 <!--        app:layout_constraintTop_toBottomOf="@+id/image_profile"-->
 <!--        app:layout_constraintVertical_bias="0" />-->
 
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_email"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="email@email.com"-->
+    <!--        android:textSize="20dp"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tv_fullname"-->
+    <!--        app:layout_constraintVertical_bias="0" />-->
+
     <EditText
         android:id="@+id/et_fullname"
         android:layout_width="wrap_content"
@@ -94,20 +107,6 @@
         app:layout_constraintTop_toBottomOf="@+id/et_email"
         app:layout_constraintVertical_bias="0" />
 
-
-    <!--    <TextView-->
-<!--        android:id="@+id/tv_email"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="email@email.com"-->
-<!--        android:textSize="20dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_fullname"-->
-<!--        app:layout_constraintVertical_bias="0" />-->
-<!--    -->
     <Button
         android:id="@+id/btn_signout"
         android:layout_width="130dp"
