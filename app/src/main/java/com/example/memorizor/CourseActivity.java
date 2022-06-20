@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -57,6 +58,7 @@ public class CourseActivity extends AppCompatActivity {
     private ImageView iv_photo;
     private TextView tv_title;
     private TextView tv_description;
+    private TextView tv_price;
     private Button btn_bookmark;
     private Button btn_buy;
     private RecyclerView rv_videos;
@@ -91,6 +93,7 @@ public class CourseActivity extends AppCompatActivity {
         tv_title = findViewById(R.id.title);
         tv_description = findViewById(R.id.description);
         btn_bookmark = findViewById(R.id.btn_bookmark);
+        tv_price = findViewById(R.id.tv_price);
         btn_buy = findViewById(R.id.btn_buy);
         rv_videos = findViewById(R.id.rv_videos);
         rating_bar = findViewById(R.id.rating_bar);
@@ -107,7 +110,7 @@ public class CourseActivity extends AppCompatActivity {
         rv_videos.setAdapter(videoAdapter);
 
         readCourse();
-        isPurchased(courseId, btn_buy);
+//        isPurchased(courseId, btn_buy);
         isBookmarked(courseId, btn_bookmark);
 
         iv_preview.setOnTouchListener(new View.OnTouchListener() {
@@ -160,8 +163,38 @@ public class CourseActivity extends AppCompatActivity {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     course = snap.getValue(Course.class);
                     tv_title.setText(course.getTitle());
+                    tv_price.setText("$" + course.getPrice());
                     tv_description.setText(course.getDescription());
                     Picasso.get().load(course.getImageUrl()).into(iv_photo);
+                    if (course.getPublisher().equals(firebaseUser.getUid())) {
+                        btn_buy.setVisibility(View.GONE);
+                        tv_price.setVisibility(View.GONE);
+                        tv_preview.setVisibility(View.GONE);
+                        iv_preview.setVisibility(View.GONE);
+                    } else {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.child(course.getCourseId()).exists()) {
+                                    btn_buy.setText("Refund Course");
+                                    tv_preview.setVisibility(View.GONE);
+                                    iv_preview.setVisibility(View.GONE);
+
+                                } else {
+                                    btn_buy.setText("Buy Now");
+                                    tv_preview.setVisibility(View.VISIBLE);
+                                    iv_preview.setVisibility(View.VISIBLE);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
             }
 
@@ -185,9 +218,9 @@ public class CourseActivity extends AppCompatActivity {
                 }
 
                 int finalRating = 0;
-                for(Rating r : ratings){
-                    finalRating+= r.getValue();
-                    if(r.getUserId().equals(firebaseUser.getUid())){
+                for (Rating r : ratings) {
+                    finalRating += r.getValue();
+                    if (r.getUserId().equals(firebaseUser.getUid())) {
                         rating_bar.setIsIndicator(true);
                         rated = true;
                     }
@@ -199,7 +232,7 @@ public class CourseActivity extends AppCompatActivity {
                 }
                 tv_ratings_number_course.setText("(" + noRatings + " ratings)");
 
-                if(rated){
+                if (rated) {
                     rating_bar.setRating(finalRating);
                 } else {
                     rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -212,7 +245,7 @@ public class CourseActivity extends AppCompatActivity {
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("courseId", courseId);
                             map.put("ratingId", ratingId);
-                            map.put("userId",firebaseUser.getUid());
+                            map.put("userId", firebaseUser.getUid());
                             map.put("value", ratingValue);
 
                             ref.child(ratingId).setValue(map);
@@ -247,32 +280,34 @@ public class CourseActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
-    private void isPurchased(final String id, final Button btn_buy) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists()) {
-                    btn_buy.setText("Refund Course");
-                    tv_preview.setVisibility(View.GONE);
-                    iv_preview.setVisibility(View.GONE);
-
-                } else {
-                    btn_buy.setText("Buy Now");
-                    tv_preview.setVisibility(View.VISIBLE);
-                    iv_preview.setVisibility(View.VISIBLE);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void isPurchased(final String id, final Button btn_buy) {
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.child(id).exists()) {
+//                    btn_buy.setText("Refund Course");
+//                    tv_preview.setVisibility(View.GONE);
+//                    iv_preview.setVisibility(View.GONE);
+//
+//                } else {
+//                    btn_buy.setText("Buy Now");
+//                    tv_preview.setVisibility(View.VISIBLE);
+//                    iv_preview.setVisibility(View.VISIBLE);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private void isBookmarked(final String id, final Button btn_bookmark) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked");

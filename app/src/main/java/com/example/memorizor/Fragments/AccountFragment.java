@@ -8,12 +8,16 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -22,7 +26,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.memorizor.AccountSettingsActivity;
 import com.example.memorizor.Adapter.CourseAdapter;
+import com.example.memorizor.AddActivity;
+import com.example.memorizor.CourseActivity;
+import com.example.memorizor.MainActivity;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
@@ -30,6 +38,8 @@ import com.example.memorizor.StartActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,12 +64,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountFragment extends Fragment {
 
     private CircleImageView profileImage;
-    private EditText email;
-    private EditText fullname;
-    private Button signout;
+    private TextView email;
+    private TextView fullname;
     private TextView tv_posted_courses;
-    private Button btn_modify;
-    private EditText et_password_reset;
+    private DrawerLayout drawer_layout;
+    private FloatingActionButton fab_settings;
+    private NavigationView account_navigation_view;
 
     private RecyclerView rv_courses_account;
     private List<String> accountCourses = new ArrayList<>();
@@ -75,12 +85,12 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         profileImage = view.findViewById(R.id.image_profile);
-        email = view.findViewById(R.id.et_email);
-        fullname = view.findViewById(R.id.et_fullname);
-        signout = view.findViewById(R.id.btn_signout);
+        email = view.findViewById(R.id.tv_email);
+        fullname = view.findViewById(R.id.tv_fullname);
         tv_posted_courses = view.findViewById(R.id.tv_posted_courses);
-        btn_modify = view.findViewById(R.id.btn_modify);
-        et_password_reset = view.findViewById(R.id.et_password_reset);
+        drawer_layout = view.findViewById(R.id.drawer_layout);
+        fab_settings = view.findViewById(R.id.fab_settings);
+        account_navigation_view = view.findViewById(R.id.account_navigation_view);
 
         readUser();
 
@@ -94,91 +104,60 @@ public class AccountFragment extends Fragment {
 
         populateAccountCourses();
 
+        fab_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.openDrawer(GravityCompat.START);
+                else drawer_layout.closeDrawer(GravityCompat.END);
+            }
+        });
+
+        account_navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_account_details:
+                        Intent intent = new Intent(getContext(), AccountSettingsActivity.class);
+                        intent.putExtra("userId", currentUser.getUserId());
+                        getContext().startActivity(intent);
+                        break;
+
+                    case R.id.nav_statistics:
+
+                        break;
+
+                    case R.id.nav_signout:
+
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        FirebaseAuth.getInstance().signOut();
+                                        startActivity(new Intent(getContext(), StartActivity.class));
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+
+                                        break;
+                                }
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                                .setNegativeButton("No", dialogClickListener).show();
+
+                        break;
+                }
+                return false;
+            }
+        });
+
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_IMAGE_FROM_GALLERY);
-            }
-        });
-
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(getContext(), StartActivity.class));
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-
-                                break;
-                        }
-                    }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
-            }
-        });
-
-        btn_modify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(fullname.getText().toString()) || !TextUtils.isEmpty(email.getText().toString()) || et_password_reset.getText().toString().length() > 6) {
-                    String password = et_password_reset.getText().toString();
-
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    AuthCredential credential = EmailAuthProvider
-                            .getCredential(currentUser.getEmail(), password);
-                    user.reauthenticate(credential)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "User re-authenticated.", Toast.LENGTH_SHORT).show();
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
-
-                                                    String userId = user.getUid();
-                                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-
-                                                    HashMap<String, Object> map = new HashMap<>();
-                                                    map.put("name", fullname.getText().toString());
-                                                    map.put("email", email.getText().toString());
-                                                    map.put("id", userId);
-                                                    map.put("permissions", "user");
-                                                    map.put("profileImageUrl", currentUser.getProfileImageUrl());
-
-                                                    ref.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                Toast.makeText(getContext(), "Details updated", Toast.LENGTH_SHORT).show();
-                                                            } else {
-                                                                Toast.makeText(getContext(), "Details failed to update", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        }
-                                                    });
-
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(getContext(), "Error re-authenticating.", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            });
-                }
             }
         });
 
