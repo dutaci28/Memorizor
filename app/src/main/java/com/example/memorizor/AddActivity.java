@@ -177,6 +177,12 @@ public class AddActivity extends AppCompatActivity {
                         }
                     }
 
+                    if(mVideoUploadUris.size() == 0){
+                        pd.dismiss();
+                        startActivity(new Intent(AddActivity.this, MainActivity.class));
+                        finish();
+                    }
+
                     for (int i = 0; i < mVideoUploadUris.size(); i++) {
                         int index = i;
                         StorageReference videoPath = FirebaseStorage.getInstance().getReference("CourseVideos").child(title.getText().toString() + "_" + index + "_" + System.currentTimeMillis() + "." + getFileExtension(mVideoUploadUris.get(index)));

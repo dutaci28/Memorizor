@@ -27,8 +27,8 @@
                 android:id="@+id/card_view_image"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:maxHeight="250dp"
                 android:elevation="10dp"
+                android:maxHeight="250dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -38,9 +38,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_gravity="center_horizontal"
+                    android:clickable="true"
                     android:scaleType="fitXY"
                     android:src="@drawable/backgroudn"
-                    android:clickable="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -129,6 +129,20 @@
                 app:layout_constraintHorizontal_bias=".5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <ImageButton
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="248dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
+                android:src="@drawable/ic_baseline_delete_forever_24"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@+id/title"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/btn_bookmark"

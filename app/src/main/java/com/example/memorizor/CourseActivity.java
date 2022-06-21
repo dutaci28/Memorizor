@@ -67,6 +67,7 @@ public class CourseActivity extends AppCompatActivity {
     private ImageView iv_preview;
     private ConstraintLayout bottom_constraint_layout;
     private TextView tv_ratings_number_course;
+    private ImageButton btn_delete;
 
     private String courseId;
     private Course course;
@@ -101,6 +102,7 @@ public class CourseActivity extends AppCompatActivity {
         iv_preview = findViewById(R.id.iv_preview);
         bottom_constraint_layout = findViewById(R.id.bottom_constraint_layout);
         tv_ratings_number_course = findViewById(R.id.tv_ratings_number_course);
+        btn_delete = findViewById(R.id.btn_delete);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -117,6 +119,127 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
+            }
+        });
+
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener1 = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                DatabaseReference dbref= FirebaseDatabase.getInstance().getReference().child("Courses");
+                                Query query=dbref.child(courseId);
+
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        dataSnapshot.getRef().removeValue();
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                DatabaseReference dbref1 = FirebaseDatabase.getInstance().getReference().child("Videos");
+                                Query query1=dbref1.orderByChild("hostCourseId").startAt(courseId).endAt(courseId + "\uf8ff");
+
+                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                            snap.getRef().removeValue();
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference().child("Ratings");
+                                Query query2=dbref2.orderByChild("courseId").startAt(courseId).endAt(courseId + "\uf8ff");
+
+                                query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                            snap.getRef().removeValue();
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                DatabaseReference dbref3 = FirebaseDatabase.getInstance().getReference().child("Bookmarks");
+                                Query query3=dbref3;
+
+                                query3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                            if (snap.child("Bookmarked").child(courseId).exists()) {
+                                                snap.child("Bookmarked").child(courseId).getRef().removeValue();
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                DatabaseReference dbref4 = FirebaseDatabase.getInstance().getReference().child("Purchases");
+                                Query query4=dbref4;
+
+                                query4.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                            if (snap.child("Purchased").child(courseId).exists()) {
+                                                snap.child("Purchased").child(courseId).getRef().removeValue();
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                DatabaseReference dbref5 = FirebaseDatabase.getInstance().getReference().child("Hashtags");
+                                Query query5=dbref5;
+
+                                query5.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot snap : dataSnapshot.getChildren()){
+                                            if (snap.child(courseId).exists()) {
+                                                snap.child(courseId).getRef().removeValue();
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                                finish();
+                                startActivity(new Intent(CourseActivity.this, MainActivity.class));
+                                finish();
+
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                builder.setMessage("Do you want to delete the course?").setPositiveButton("Yes", dialogClickListener1)
+                        .setNegativeButton("No", dialogClickListener1).show();
             }
         });
 
@@ -171,6 +294,8 @@ public class CourseActivity extends AppCompatActivity {
                         tv_price.setVisibility(View.GONE);
                         tv_preview.setVisibility(View.GONE);
                         iv_preview.setVisibility(View.GONE);
+                        btn_bookmark.setVisibility(View.GONE);
+                        btn_delete.setVisibility(View.VISIBLE);
                     } else {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
                         reference.addValueEventListener(new ValueEventListener() {
