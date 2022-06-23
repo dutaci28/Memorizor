@@ -43,6 +43,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +67,7 @@ public class CourseActivity extends AppCompatActivity {
     private Button btn_generate_diploma;
 
     //diploma
-    TextView tv_diploma_name, tv_diploma_course_title;
+    TextView tv_diploma_name, tv_diploma_course_title, tv_diploma_date;
 
     private String courseId;
     private Course course;
@@ -101,8 +103,6 @@ public class CourseActivity extends AppCompatActivity {
         tv_ratings_number_course = findViewById(R.id.tv_ratings_number_course);
         btn_delete = findViewById(R.id.btn_delete);
         btn_generate_diploma = findViewById(R.id.btn_generate_diploma);
-        tv_diploma_course_title = findViewById(R.id.tv_diploma_course_title);
-        tv_diploma_name = findViewById(R.id.tv_diploma_name);
 
         courseId = getIntent().getStringExtra("courseId");
 
@@ -122,8 +122,12 @@ public class CourseActivity extends AppCompatActivity {
                 TextView tv_diploma_name, tv_diploma_course_title;
                 tv_diploma_name = content.findViewById(R.id.tv_diploma_name);
                 tv_diploma_course_title = content.findViewById(R.id.tv_diploma_course_title);
+                tv_diploma_date = content.findViewById(R.id.tv_diploma_date);
                 tv_diploma_name.setText(currentUser.getName());
                 tv_diploma_course_title.setText(course.getTitle());
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime now = LocalDateTime.now();
+                tv_diploma_date.setText(dtf.format(now));
 
                 PdfGenerator.getBuilder()
                         .setContext(CourseActivity.this)

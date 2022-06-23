@@ -159,6 +159,7 @@
         app:layout_constraintVertical_bias="1" />
 
     <TextView
+        android:id="@+id/tv_diploma_date"
         android:layout_width="110dp"
         android:layout_height="30dp"
         android:text="23/06/2022"
