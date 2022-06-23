@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="410dp"
+    android:layout_height="300dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="410dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroudn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:text="Certificate"
+        android:textColor="@color/white"
+        android:textSize="23dp"
+        android:textStyle="bold"
+        app:layout_constraintVertical_bias=".2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:text="of completion"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintVertical_bias=".28"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:text="The certificate is presented to:"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintVertical_bias=".45"
+        app:layout_constraintWidth_percent=".8"
+        android:gravity="center"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_diploma_name"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:text="Catalin-Ionut Duta"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintVertical_bias=".53"
+        app:layout_constraintWidth_percent=".8"
+        android:gravity="center_horizontal"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:text="for successful completion of course:"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintVertical_bias=".63"
+        app:layout_constraintWidth_percent=".8"
+        android:gravity="center"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_diploma_course_title"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:text="Java SE8 for beginners"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintVertical_bias=".71"
+        app:layout_constraintWidth_percent=".8"
+        android:gravity="center"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="410dp"
+        android:layout_height="70dp"
+        android:src="@drawable/logo_light_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="Date:"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintVertical_bias=".85"
+        app:layout_constraintHorizontal_bias="0"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:text="Signature:"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintVertical_bias=".85"
+        app:layout_constraintHorizontal_bias="1"
+        android:gravity="center"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:layout_constraintHorizontal_bias=".99"
+        android:src="@drawable/signature"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
+
+    <TextView
+        android:layout_width="110dp"
+        android:layout_height="30dp"
+        android:text="23/06/2022"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintVertical_bias=".92"
+        app:layout_constraintHorizontal_bias="0"
+        android:gravity="center"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
