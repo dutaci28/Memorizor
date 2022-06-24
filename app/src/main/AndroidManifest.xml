@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memorizor">
         <activity
+            android:name=".UserStatsActivity"
+            android:exported="true" />
+        <activity
             android:name=".ModeratorUserDetailsActivity"
             android:exported="true" />
         <activity
