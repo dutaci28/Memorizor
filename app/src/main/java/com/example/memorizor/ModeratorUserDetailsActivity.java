@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
+import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,9 +46,10 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
     private List<Course> mCoursesPublished = new ArrayList<>();
     private List<Course> mCoursesBookmarked = new ArrayList<>();
     private User currentUser;
-    private int noPublished = 0;
     private SimpleCourseAdapter courseAdapterPublished;
     private SimpleCourseAdapter courseAdapterBookmarked;
+    private int ratingsMean = 0;
+    private int ratingsTotal = 0;
 
 
     @Override
@@ -142,7 +144,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             accountCoursesBookmarked.clear();
-                            for(DataSnapshot snap : snapshot.getChildren()){
+                            for (DataSnapshot snap : snapshot.getChildren()) {
                                 accountCoursesBookmarked.add(snap.getKey());
                             }
                         }
@@ -177,6 +179,28 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                     });
 
                     //RATING-URI SI MEDIA LOR
+
+                    FirebaseDatabase.getInstance().getReference().child("Ratings").orderByChild("userId").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            ratingsMean = 0;
+                            ratingsTotal = 0;
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Rating rating = snap.getValue(Rating.class);
+                                ratingsMean += rating.getValue();
+                                ratingsTotal += 1;
+
+                            }
+                            ratingsMean /= ratingsTotal;
+                            String ratings = "Ratings given: " + ratingsTotal + " avg(" + ratingsMean + ")";
+                            tv_ratings_posted.setText(ratings);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
 
                     //CURSURI CUMPARATE
                 }
