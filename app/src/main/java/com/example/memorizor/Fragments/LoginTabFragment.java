@@ -17,8 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.memorizor.MainActivity;
+import com.example.memorizor.MainActivityModerator;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
+import com.example.memorizor.StartActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +39,7 @@ public class LoginTabFragment extends Fragment {
     private Button login;
 
     private FirebaseAuth mAuth;
+    private User currentUser;
 
     @Nullable
     @Override
@@ -112,13 +115,41 @@ public class LoginTabFragment extends Fragment {
         pd.setMessage("Logging in");
         pd.show();
 
+
         mAuth.signInWithEmailAndPassword(email , password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
+                    pd.dismiss();
+
+
+                    Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
+                            .orderByChild("id").startAt(FirebaseAuth.getInstance().getCurrentUser().getUid()).endAt(FirebaseAuth.getInstance().getCurrentUser().getUid() + "\uf8ff");
+
+                    query1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                currentUser = snap.getValue(User.class);
+                                if(currentUser.getPermissions().equals("user")){
+                                    startActivity(new Intent(getContext() , MainActivity.class));
+                                    getActivity().finish();
+                                }
+                                if(currentUser.getPermissions().equals("moderator")){
+                                    startActivity(new Intent(getContext() , MainActivityModerator.class));
+                                    getActivity().finish();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                     Intent intent = new Intent(getContext() , MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pd.dismiss();
                     startActivity(intent);
                     getActivity().finish();
                 } else {

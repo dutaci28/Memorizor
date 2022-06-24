@@ -41,13 +41,17 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
     public ImageButton btn_delete_user;
     public ImageButton btn_edit_user;
     public CircleImageView image_profile_user_moderator;
-    public RecyclerView rv_courses_user;
+    public RecyclerView rv_courses_user_purchased;
+    public RecyclerView rv_courses_user_bookmarked;
 
-    private List<String> accountCourses = new ArrayList<>();
-    private List<Course> mCourses = new ArrayList<>();
+    private List<String> accountCoursesPublished = new ArrayList<>();
+    private List<String> accountCoursesBookmarked = new ArrayList<>();
+    private List<Course> mCoursesPublished = new ArrayList<>();
+    private List<Course> mCoursesBookmarked = new ArrayList<>();
     private User currentUser;
     private int noPublished = 0;
-    private SimpleCourseAdapter courseAdapter;
+    private SimpleCourseAdapter courseAdapterPublished;
+    private SimpleCourseAdapter courseAdapterBookmarked;
 
 
     @Override
@@ -64,7 +68,8 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
         btn_delete_user = findViewById(R.id.btn_delete_user);
         btn_edit_user = findViewById(R.id.btn_edit_user);
         image_profile_user_moderator = findViewById(R.id.image_profile_user_moderator);
-        rv_courses_user = findViewById(R.id.rv_courses_user);
+        rv_courses_user_purchased = findViewById(R.id.rv_courses_user_purchased);
+        rv_courses_user_bookmarked = findViewById(R.id.rv_courses_user_bookmarked);
 
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
                 .orderByChild("id").startAt(getIntent().getStringExtra("userId")).endAt(getIntent().getStringExtra("userId") + "\uf8ff");
@@ -82,20 +87,20 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         Picasso.get().load(currentUser.getProfileImageUrl()).placeholder(R.drawable.backgroudn).into(image_profile_user_moderator);
                     }
 
-                    rv_courses_user = findViewById(R.id.rv_courses_user);
-                    rv_courses_user.setHasFixedSize(true);
-                    rv_courses_user.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    rv_courses_user_purchased = findViewById(R.id.rv_courses_user_purchased);
+                    rv_courses_user_purchased.setHasFixedSize(true);
+                    rv_courses_user_purchased.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
-                    mCourses = new ArrayList<>();
-                    courseAdapter = new SimpleCourseAdapter(getBaseContext(), mCourses, true);
-                    rv_courses_user.setAdapter(courseAdapter);
+                    mCoursesPublished = new ArrayList<>();
+                    courseAdapterPublished = new SimpleCourseAdapter(getBaseContext(), mCoursesPublished, true);
+                    rv_courses_user_purchased.setAdapter(courseAdapterPublished);
 
                     FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            accountCourses.clear();
+                            accountCoursesPublished.clear();
                             for (DataSnapshot snap : snapshot.getChildren()) {
-                                accountCourses.add(snap.getKey());
+                                accountCoursesPublished.add(snap.getKey());
                             }
                         }
 
@@ -108,24 +113,64 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                     reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            mCourses.clear();
+                            mCoursesPublished.clear();
                             for (DataSnapshot snap : snapshot.getChildren()) {
-                                for (String s : accountCourses) {
+                                for (String s : accountCoursesPublished) {
                                     Course course = snap.getValue(Course.class);
                                     if (course.getCourseId().equals(s)) {
-                                        mCourses.add(course);
+                                        mCoursesPublished.add(course);
                                     }
                                 }
                             }
-                            String published = "Published courses: " + mCourses.size();
+                            String published = "Published courses: " + mCoursesPublished.size();
                             tv_published_courses.setText(published);
-                            courseAdapter.notifyDataSetChanged();
+                            courseAdapterPublished.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
+
+                    mCoursesBookmarked = new ArrayList<>();
+                    courseAdapterBookmarked = new SimpleCourseAdapter(getBaseContext(), mCoursesBookmarked, true);
+                    rv_courses_user_bookmarked.setAdapter(courseAdapterBookmarked);
+
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(currentUser.getId()).child("Bookmarked").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            accountCoursesBookmarked.clear();
+                            for(DataSnapshot snap : snapshot.getChildren()){
+                                accountCoursesBookmarked.add(snap.getKey());
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference().child("Courses");
+                    reference1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            mCoursesBookmarked.clear();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                for(String s : accountCoursesBookmarked){
+                                    Course course = snap.getValue(Course.class);
+                                    if(course.getCourseId().equals(s)){
+                                        mCoursesBookmarked.add(course);
+                                    }
+                                }
+                            }
+                            String bookmarked = "Bookmarked courses: " + mCoursesBookmarked.size();
+                            tv_bookmarked_courses.setText(bookmarked);
+                            courseAdapterBookmarked.notifyDataSetChanged();
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
 
                 }
             }
