@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memorizor">
         <activity
+            android:name=".ModeratorUserDetailsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivityModerator"
+            android:exported="true" />
+        <activity
             android:name=".AccountSettingsActivity"
             android:exported="true" />
         <activity

@@ -14,23 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.memorizor.AccountSettingsActivity;
 import com.example.memorizor.Adapter.CourseAdapter;
-import com.example.memorizor.AddActivity;
-import com.example.memorizor.CourseActivity;
-import com.example.memorizor.MainActivity;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
@@ -40,10 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -117,7 +107,7 @@ public class AccountFragment extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.nav_account_details:
                         Intent intent = new Intent(getContext(), AccountSettingsActivity.class);
-                        intent.putExtra("userId", currentUser.getUserId());
+                        intent.putExtra("userId", currentUser.getId());
                         getContext().startActivity(intent);
                         break;
 

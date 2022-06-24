@@ -75,7 +75,8 @@ public class StartActivity extends AppCompatActivity {
                         }
                         if(currentUser.getPermissions().equals("moderator")){
                             pd.dismiss();
-                            //REDIRECTARE CU INTENT CATRE MAIN ACTIVITY PT MODERATOR
+                            startActivity(new Intent(StartActivity.this , MainActivityModerator.class));
+                            finish();
                         }
                     }
                 }
