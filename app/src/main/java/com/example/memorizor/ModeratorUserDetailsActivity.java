@@ -2,7 +2,6 @@ package com.example.memorizor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,13 +9,10 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.User;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,7 +37,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
     public ImageButton btn_delete_user;
     public ImageButton btn_edit_user;
     public CircleImageView image_profile_user_moderator;
-    public RecyclerView rv_courses_user_purchased;
+    public RecyclerView rv_courses_user_published;
     public RecyclerView rv_courses_user_bookmarked;
 
     private List<String> accountCoursesPublished = new ArrayList<>();
@@ -70,7 +66,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
         btn_delete_user = findViewById(R.id.btn_delete_user);
         btn_edit_user = findViewById(R.id.btn_edit_user);
         image_profile_user_moderator = findViewById(R.id.image_profile_user_moderator);
-        rv_courses_user_purchased = findViewById(R.id.rv_courses_user_purchased);
+        rv_courses_user_published = findViewById(R.id.rv_courses_user_published);
         rv_courses_user_bookmarked = findViewById(R.id.rv_courses_user_bookmarked);
 
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
@@ -89,12 +85,13 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         Picasso.get().load(currentUser.getProfileImageUrl()).placeholder(R.drawable.backgroudn).into(image_profile_user_moderator);
                     }
 
-                    rv_courses_user_purchased.setHasFixedSize(true);
-                    rv_courses_user_purchased.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+                    //CURSURI PUBLICATE
+                    rv_courses_user_published.setHasFixedSize(true);
+                    rv_courses_user_published.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
                     mCoursesPublished = new ArrayList<>();
                     courseAdapterPublished = new SimpleCourseAdapter(getBaseContext(), mCoursesPublished, true);
-                    rv_courses_user_purchased.setAdapter(courseAdapterPublished);
+                    rv_courses_user_published.setAdapter(courseAdapterPublished);
 
                     FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
                         @Override
@@ -133,6 +130,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         }
                     });
 
+                    //CURSURI CU BOOKMARK
                     rv_courses_user_bookmarked.setHasFixedSize(true);
                     rv_courses_user_bookmarked.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
@@ -177,6 +175,10 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
+
+                    //RATING-URI SI MEDIA LOR
+
+                    //CURSURI CUMPARATE
                 }
             }
 
