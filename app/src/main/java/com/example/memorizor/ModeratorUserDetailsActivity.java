@@ -59,6 +59,8 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moderator_user_details);
 
+        getSupportActionBar().hide();
+
         et_fullname_user_moderator = findViewById(R.id.et_fullname_user_moderator);
         tv_email_user_moderator = findViewById(R.id.tv_email_user_moderator);
         tv_published_courses = findViewById(R.id.tv_published_courses);
@@ -87,7 +89,6 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         Picasso.get().load(currentUser.getProfileImageUrl()).placeholder(R.drawable.backgroudn).into(image_profile_user_moderator);
                     }
 
-                    rv_courses_user_purchased = findViewById(R.id.rv_courses_user_purchased);
                     rv_courses_user_purchased.setHasFixedSize(true);
                     rv_courses_user_purchased.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
@@ -132,6 +133,9 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         }
                     });
 
+                    rv_courses_user_bookmarked.setHasFixedSize(true);
+                    rv_courses_user_bookmarked.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
                     mCoursesBookmarked = new ArrayList<>();
                     courseAdapterBookmarked = new SimpleCourseAdapter(getBaseContext(), mCoursesBookmarked, true);
                     rv_courses_user_bookmarked.setAdapter(courseAdapterBookmarked);
@@ -144,8 +148,10 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                                 accountCoursesBookmarked.add(snap.getKey());
                             }
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
 
@@ -155,9 +161,9 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             mCoursesBookmarked.clear();
                             for (DataSnapshot snap : snapshot.getChildren()) {
-                                for(String s : accountCoursesBookmarked){
+                                for (String s : accountCoursesBookmarked) {
                                     Course course = snap.getValue(Course.class);
-                                    if(course.getCourseId().equals(s)){
+                                    if (course.getCourseId().equals(s)) {
                                         mCoursesBookmarked.add(course);
                                     }
                                 }
@@ -166,12 +172,11 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                             tv_bookmarked_courses.setText(bookmarked);
                             courseAdapterBookmarked.notifyDataSetChanged();
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
-
-
                 }
             }
 
