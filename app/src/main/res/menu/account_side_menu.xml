@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/nav_account_details"
-        android:title="Account details" />
+        android:title="Account settings" />
 
     <item
         android:id="@+id/nav_statistics"

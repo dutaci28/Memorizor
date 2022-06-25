@@ -42,7 +42,6 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
 //    public TextView tv_ratings_posted;
 //    public TextView tv_purchased_courses;
     public ImageButton btn_delete_user;
-    public ImageButton btn_edit_user;
     public CircleImageView image_profile_user_moderator;
     public RecyclerView rv_courses_user_published;
     public RecyclerView rv_courses_user_bookmarked;
@@ -75,7 +74,6 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
         et_fullname_user_moderator = findViewById(R.id.tv_fullname_user_moderator);
         tv_email_user_moderator = findViewById(R.id.tv_email_user_moderator);
         btn_delete_user = findViewById(R.id.btn_delete_user);
-        btn_edit_user = findViewById(R.id.btn_edit_user);
         image_profile_user_moderator = findViewById(R.id.image_profile_user_moderator);
         rv_courses_user_published = findViewById(R.id.rv_courses_user_published);
         rv_courses_user_bookmarked = findViewById(R.id.rv_courses_user_bookmarked);

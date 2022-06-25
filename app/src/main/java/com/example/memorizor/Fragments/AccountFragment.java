@@ -170,7 +170,6 @@ public class AccountFragment extends Fragment {
                     email.setText(currentUser.getEmail());
                     fullname.setText(currentUser.getName());
                     if (currentUser.getProfileImageUrl().equals("")) {
-                        Toast.makeText(getContext(), "You can upload a profile image by clicking on the circle view.", Toast.LENGTH_SHORT).show();
                     } else {
                         Picasso.get().load(currentUser.getProfileImageUrl()).into(profileImage);
                     }

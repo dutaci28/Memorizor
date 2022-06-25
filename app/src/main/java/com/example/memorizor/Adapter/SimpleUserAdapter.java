@@ -76,12 +76,6 @@ public class SimpleUserAdapter extends RecyclerView.Adapter<SimpleUserAdapter.Vi
 
         public TextView tv_fullname_user;
         public TextView tv_email_user;
-//        public TextView tv_published_courses;
-//        public TextView tv_bookmarked_courses;
-//        public TextView tv_ratings_posted;
-//        public TextView tv_purchased_courses;
-        public ImageButton btn_delete_user;
-        public ImageButton btn_edit_user;
         public CircleImageView image_profile_user;
         public CardView cardView_user;
 
@@ -91,12 +85,6 @@ public class SimpleUserAdapter extends RecyclerView.Adapter<SimpleUserAdapter.Vi
 
             tv_fullname_user = itemView.findViewById(R.id.tv_fullname_user);
             tv_email_user = itemView.findViewById(R.id.tv_email_user);
-//            tv_published_courses = itemView.findViewById(R.id.tv_published_courses);
-//            tv_bookmarked_courses = itemView.findViewById(R.id.tv_bookmarked_courses);
-//            tv_ratings_posted = itemView.findViewById(R.id.tv_ratings_posted);
-//            tv_purchased_courses = itemView.findViewById(R.id.tv_purchased_courses);
-            btn_delete_user = itemView.findViewById(R.id.btn_delete_user);
-            btn_edit_user = itemView.findViewById(R.id.btn_edit_user);
             image_profile_user = itemView.findViewById(R.id.image_profile_user);
             cardView_user = itemView.findViewById(R.id.cardView_user);
         }
