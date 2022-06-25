@@ -11,6 +11,7 @@ import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
+import com.github.mikephil.charting.charts.PieChart;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,12 +24,11 @@ import java.util.List;
 
 public class UserStatsActivity extends AppCompatActivity {
 
-    public EditText et_fullname_user_moderator;
-    public TextView tv_email_user_moderator;
     public TextView tv_published_courses;
     public TextView tv_bookmarked_courses;
     public TextView tv_ratings_posted;
     public TextView tv_purchased_courses;
+    public PieChart piechart_user_relevant_categories;
 
     private List<String> accountCoursesPublished = new ArrayList<>();
     private List<String> accountCoursesBookmarked = new ArrayList<>();
@@ -50,12 +50,11 @@ public class UserStatsActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        et_fullname_user_moderator = findViewById(R.id.tv_fullname_user_moderator);
-        tv_email_user_moderator = findViewById(R.id.tv_email_user_moderator);
         tv_published_courses = findViewById(R.id.tv_published_courses);
         tv_bookmarked_courses = findViewById(R.id.tv_bookmarked_courses);
         tv_ratings_posted = findViewById(R.id.tv_ratings_posted);
         tv_purchased_courses = findViewById(R.id.tv_purchased_courses);
+        piechart_user_relevant_categories = findViewById(R.id.piechart_user_relevant_categories);
 
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
                 .orderByChild("id").startAt(getIntent().getStringExtra("userId")).endAt(getIntent().getStringExtra("userId") + "\uf8ff");
@@ -65,8 +64,6 @@ public class UserStatsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     currentUser = snap.getValue(User.class);
-
-
 
 
                     mCoursesPublished = new ArrayList<>();

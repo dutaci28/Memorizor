@@ -302,7 +302,9 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (btn_buy.getText().toString().equals("Buy Now")) {
-                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(true);
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDateTime now = LocalDateTime.now();
+                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(dtf.format(now));
                     tv_preview.setVisibility(View.GONE);
                     iv_preview.setVisibility(View.GONE);
 
@@ -318,7 +320,9 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if ((Boolean) btn_bookmark.getTag()) {
-                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).setValue(true);
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDateTime now = LocalDateTime.now();
+                    FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).setValue(dtf.format(now));
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Bookmarks").child(firebaseUser.getUid()).child("Bookmarked").child(course.getCourseId()).removeValue();
                 }
