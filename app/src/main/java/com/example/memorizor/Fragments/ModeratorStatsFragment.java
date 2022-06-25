@@ -216,7 +216,7 @@ public class ModeratorStatsFragment extends Fragment {
 
                                                 //BARCHART PROFIT PER CURS
                                                 List<BarEntry> entries2 = new ArrayList();
-
+                                                float poz = 0;
                                                 for (String key : coursesTotalSalesEach.keySet()) {
                                                     float f = coursesTotalSalesEach.get(key);
                                                     String result = null;
@@ -225,7 +225,8 @@ public class ModeratorStatsFragment extends Fragment {
                                                             result = c.getTitle();
                                                         }
                                                     }
-                                                    entries2.add(new BarEntry(f, f, result));
+                                                    poz += 1;
+                                                    entries2.add(new BarEntry(poz, f, result));
                                                 }
 
                                                 BarDataSet bardataset = new BarDataSet(entries2, "Individual profits");
