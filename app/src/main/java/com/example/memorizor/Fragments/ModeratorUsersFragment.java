@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.memorizor.Adapter.SimpleUserAdapter;
 import com.example.memorizor.Model.User;
@@ -31,8 +33,8 @@ public class ModeratorUsersFragment extends Fragment {
     private RecyclerView rv_users;
     private List<User> mUsers;
     private SimpleUserAdapter userAdapter;
-
     private EditText et_search_users;
+    private TextView tv_total_users;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ModeratorUsersFragment extends Fragment {
 
         rv_users = view.findViewById(R.id.rv_users);
         et_search_users = view.findViewById(R.id.et_search_users);
+        tv_total_users = view.findViewById(R.id.tv_total_users);
 
         mUsers = new ArrayList<>();
 
@@ -78,6 +81,8 @@ public class ModeratorUsersFragment extends Fragment {
                     User user = snap.getValue(User.class);
                     mUsers.add(user);
                 }
+                String total = "Total users: " + mUsers.size();
+                tv_total_users.setText(total);
                 userAdapter.notifyDataSetChanged();
             }
 
@@ -99,6 +104,8 @@ public class ModeratorUsersFragment extends Fragment {
                     if (user.getName().toLowerCase().contains(s.toLowerCase()) || user.getEmail().toLowerCase().contains(s.toLowerCase())) {
                         mUsers.add(user);
                     }
+                    String total = "Searched users: " + mUsers.size();
+                    tv_total_users.setText(total);
                     userAdapter.notifyDataSetChanged();
                 }
 

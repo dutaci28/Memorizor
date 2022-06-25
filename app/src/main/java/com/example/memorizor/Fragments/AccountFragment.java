@@ -28,6 +28,7 @@ import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.example.memorizor.StartActivity;
+import com.example.memorizor.UserStatsActivity;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -112,6 +113,11 @@ public class AccountFragment extends Fragment {
                         break;
 
                     case R.id.nav_statistics:
+
+                        Intent intent1 = new Intent(getContext(), UserStatsActivity.class);
+                        intent1.putExtra("userId", currentUser.getId());
+                        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getContext().startActivity(intent1);
 
                         break;
 

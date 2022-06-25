@@ -13,6 +13,7 @@ import com.example.memorizor.Fragments.AccountFragment;
 import com.example.memorizor.Fragments.BookmarksFragment;
 import com.example.memorizor.Fragments.HomeFragment;
 import com.example.memorizor.Fragments.ModeratorCoursesFragment;
+import com.example.memorizor.Fragments.ModeratorStatsFragment;
 import com.example.memorizor.Fragments.ModeratorUsersFragment;
 import com.example.memorizor.Fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,6 +45,10 @@ public class MainActivityModerator extends AppCompatActivity {
 
                     case R.id.nav_users:
                         selectorFragment = new ModeratorUsersFragment();
+                        break;
+
+                    case R.id.nav_stats_moderator:
+                        selectorFragment = new ModeratorStatsFragment();
                         break;
                 }
 
