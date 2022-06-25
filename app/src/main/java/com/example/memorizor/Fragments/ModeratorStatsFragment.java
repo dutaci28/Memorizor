@@ -13,20 +13,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
 import com.example.memorizor.R;
 import com.example.memorizor.StartActivity;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +56,7 @@ public class ModeratorStatsFragment extends Fragment {
     private Button btn_moderator_sign_out;
     private PieChart piechart_moderator_all_categories;
     private PieChart piechart_moderator_profit_categories;
+    private BarChart barchart_moderator_profit_per_course;
 
     private List<User> allUsers = new ArrayList<>();
     private List<Course> allCourses = new ArrayList<>();
@@ -61,6 +71,7 @@ public class ModeratorStatsFragment extends Fragment {
         btn_moderator_sign_out = view.findViewById(R.id.btn_moderator_sign_out);
         piechart_moderator_all_categories = view.findViewById(R.id.piechart_moderator_all_categories);
         piechart_moderator_profit_categories = view.findViewById(R.id.piechart_moderator_profit_categories);
+        barchart_moderator_profit_per_course = view.findViewById(R.id.barchart_moderator_profit_per_course);
 
         btn_moderator_sign_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,21 +155,21 @@ public class ModeratorStatsFragment extends Fragment {
                                         piechart_moderator_all_categories.animateY(500);
 
                                         //CHART CATEGORII SI PROFIT AFERENT
-                                        Map <String,Float> coursesTotalSalesEach = new HashMap<>();
+                                        Map<String, Float> coursesTotalSalesEach = new HashMap<>();
                                         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Purchases");
                                         dbref.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for(DataSnapshot snap : dataSnapshot.getChildren()){
-                                                    for(DataSnapshot snap1 : snap.child("Purchased").getChildren()){
+                                                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                    for (DataSnapshot snap1 : snap.child("Purchased").getChildren()) {
                                                         Course searchedCourse = new Course();
-                                                        for(Course c : allCourses){
-                                                            if(c.getCourseId().equals(snap1.getKey())){
+                                                        for (Course c : allCourses) {
+                                                            if (c.getCourseId().equals(snap1.getKey())) {
                                                                 searchedCourse = c;
                                                             }
                                                         }
 
-                                                        if(coursesTotalSalesEach.get(snap1.getKey()) == null){
+                                                        if (coursesTotalSalesEach.get(snap1.getKey()) == null) {
                                                             coursesTotalSalesEach.put(snap1.getKey(), Float.valueOf(searchedCourse.getPrice()).floatValue());
                                                         } else {
                                                             float previousValue = coursesTotalSalesEach.get(snap1.getKey());
@@ -180,10 +191,10 @@ public class ModeratorStatsFragment extends Fragment {
                                                 for (String category : allHashtags.keySet()) {
                                                     float sum = 0;
                                                     for (String courseId : allHashtags.get(category)) {
-                                                        for(String key1 : coursesTotalSalesEach.keySet()){
-                                                            if(courseId.equals(key1)){
-                                                                for(Course c : allCourses){
-                                                                    if(c.getCourseId().equals(courseId)){
+                                                        for (String key1 : coursesTotalSalesEach.keySet()) {
+                                                            if (courseId.equals(key1)) {
+                                                                for (Course c : allCourses) {
+                                                                    if (c.getCourseId().equals(courseId)) {
                                                                         sum += Float.valueOf(c.getPrice()).floatValue();
                                                                     }
                                                                 }
@@ -203,13 +214,45 @@ public class ModeratorStatsFragment extends Fragment {
                                                 piechart_moderator_profit_categories.animateY(500);
 
 
+                                                //BARCHART PROFIT PER CURS
+                                                List<BarEntry> entries2 = new ArrayList();
+
+                                                for (String key : coursesTotalSalesEach.keySet()) {
+                                                    float f = coursesTotalSalesEach.get(key);
+                                                    String result = null;
+                                                    for (Course c : allCourses) {
+                                                        if (c.getCourseId().equals(key)) {
+                                                            result = c.getTitle();
+                                                        }
+                                                    }
+                                                    entries2.add(new BarEntry(f, f, result));
+                                                }
+
+                                                BarDataSet bardataset = new BarDataSet(entries2, "Individual profits");
+                                                barchart_moderator_profit_per_course.animateY(500);
+                                                BarData data = new BarData(bardataset);
+                                                bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                                                barchart_moderator_profit_per_course.setDescription(desc1);
+                                                barchart_moderator_profit_per_course.setData(data);
+
+                                                barchart_moderator_profit_per_course.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                                                    @Override
+                                                    public void onValueSelected(Entry e, Highlight h) {
+                                                        Toast.makeText(getContext(), e.getData().toString(), Toast.LENGTH_SHORT).show();
+                                                    }
+
+                                                    @Override
+                                                    public void onNothingSelected() {
+
+                                                    }
+                                                });
+
                                             }
+
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                             }
                                         });
-
-
 
 
                                     }
