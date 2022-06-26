@@ -135,7 +135,6 @@ public class ModeratorStatsFragment extends Fragment {
                                         ArrayList<PieEntry> entries;
                                         PieDataSet pieDataSet;
                                         PieData pieData;
-
                                         entries = new ArrayList<>();
                                         for (String key : allHashtags.keySet()) {
                                             int count = 0;
@@ -144,7 +143,6 @@ public class ModeratorStatsFragment extends Fragment {
                                             }
                                             entries.add(new PieEntry(count, key));
                                         }
-
                                         pieDataSet = new PieDataSet(entries, "");
                                         pieData = new PieData(pieDataSet);
                                         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -186,7 +184,6 @@ public class ModeratorStatsFragment extends Fragment {
                                                 ArrayList<PieEntry> entries1;
                                                 PieDataSet pieDataSet1;
                                                 PieData pieData1;
-
                                                 entries1 = new ArrayList<>();
                                                 for (String category : allHashtags.keySet()) {
                                                     float sum = 0;
@@ -203,7 +200,6 @@ public class ModeratorStatsFragment extends Fragment {
                                                     }
                                                     entries1.add(new PieEntry(sum, category));
                                                 }
-
                                                 pieDataSet1 = new PieDataSet(entries1, "");
                                                 pieData1 = new PieData(pieDataSet1);
                                                 pieDataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -212,7 +208,6 @@ public class ModeratorStatsFragment extends Fragment {
                                                 desc1.setText("");
                                                 piechart_moderator_profit_categories.setDescription(desc1);
                                                 piechart_moderator_profit_categories.animateY(500);
-
 
                                                 //BARCHART PROFIT PER CURS
                                                 List<BarEntry> entries2 = new ArrayList();
@@ -225,7 +220,7 @@ public class ModeratorStatsFragment extends Fragment {
                                                             result = c.getTitle();
                                                         }
                                                     }
-                                                    poz += 1;
+                                                    poz += 3;
                                                     entries2.add(new BarEntry(poz, f, result));
                                                 }
 
@@ -248,43 +243,35 @@ public class ModeratorStatsFragment extends Fragment {
                                                     }
                                                 });
 
-                                            }
+                                                //ISTORIC PURCHASE URI
 
+
+
+                                            }
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                             }
                                         });
-
-
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-
                                     }
                                 });
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-
 
         return view;
     }

@@ -139,6 +139,7 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_baseline_delete_forever_24"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@+id/title"

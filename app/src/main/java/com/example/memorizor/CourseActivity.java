@@ -473,6 +473,12 @@ public class CourseActivity extends AppCompatActivity {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     currentUser = snap.getValue(User.class);
                 }
+
+                if(currentUser.getPermissions().equals("moderator") || course.getPublisher().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    btn_delete.setVisibility(View.VISIBLE);
+                } else {
+                    btn_delete.setVisibility(View.GONE);
+                }
             }
 
             @Override
