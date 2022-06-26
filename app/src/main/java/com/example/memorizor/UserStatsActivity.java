@@ -6,12 +6,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +32,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserStatsActivity extends AppCompatActivity {
 
@@ -42,6 +56,8 @@ public class UserStatsActivity extends AppCompatActivity {
     private SimpleCourseAdapter courseAdapterPurchased;
     private int ratingsMean = 0;
     private int ratingsTotal = 0;
+
+    private Map<String, List<String>> allHashtags = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +201,51 @@ public class UserStatsActivity extends AppCompatActivity {
                             for (DataSnapshot snap : snapshot.getChildren()) {
                                 accountCoursesPurchased.add(snap.getKey());
                             }
+
+                            FirebaseDatabase.getInstance().getReference().child("Hashtags").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot snap : snapshot.getChildren()) {
+                                        if (allHashtags.get(snap.getKey()) == null) {
+                                            allHashtags.put(snap.getKey(), new ArrayList<>());
+                                        }
+                                        for (DataSnapshot snap1 : snap.getChildren()) {
+                                            allHashtags.get(snap.getKey()).add(snap1.getKey());
+                                        }
+
+                                    }
+
+                                    //PRIMUL PIECHART
+                                    ArrayList<PieEntry> entries;
+                                    PieDataSet pieDataSet;
+                                    PieData pieData;
+                                    entries = new ArrayList<>();
+
+                                    for (String key : allHashtags.keySet()) {
+                                        int count = 0;
+                                        for (String courseId : allHashtags.get(key)) {
+                                            for(String courseIdPurchased : accountCoursesPurchased){
+                                                if(courseId.equals(courseIdPurchased)){
+                                                    count += 1;
+                                                }
+                                            }
+                                        }
+                                        entries.add(new PieEntry(count, key));
+                                    }
+
+                                    pieDataSet = new PieDataSet(entries, "");
+                                    pieData = new PieData(pieDataSet);
+                                    pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                                    piechart_user_relevant_categories.setData(pieData);
+                                    Description desc = new Description();
+                                    desc.setText("");
+                                    piechart_user_relevant_categories.setDescription(desc);
+                                    piechart_user_relevant_categories.animateY(500);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                         }
 
                         @Override
