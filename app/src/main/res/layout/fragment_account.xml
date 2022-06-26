@@ -119,9 +119,9 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/account_navigation_view"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
+        android:layout_gravity="end"
         app:menu="@menu/account_side_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

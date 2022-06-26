@@ -96,9 +96,9 @@ public class AccountFragment extends Fragment {
         fab_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!drawer_layout.isDrawerOpen(GravityCompat.START))
-                    drawer_layout.openDrawer(GravityCompat.START);
-                else drawer_layout.closeDrawer(GravityCompat.END);
+                if (!drawer_layout.isDrawerOpen(GravityCompat.END))
+                    drawer_layout.openDrawer(GravityCompat.END);
+                else drawer_layout.closeDrawer(GravityCompat.START);
             }
         });
 
