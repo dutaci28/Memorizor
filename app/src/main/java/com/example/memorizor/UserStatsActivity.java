@@ -12,6 +12,7 @@ import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Rating;
 import com.example.memorizor.Model.User;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
@@ -42,7 +43,9 @@ public class UserStatsActivity extends AppCompatActivity {
     public TextView tv_bookmarked_courses;
     public TextView tv_ratings_posted;
     public TextView tv_purchased_courses;
+    public TextView tv_total_profit;
     public PieChart piechart_user_relevant_categories;
+    public BarChart barchart_user_profit_per_course;
 
     private List<String> accountCoursesPublished = new ArrayList<>();
     private List<String> accountCoursesBookmarked = new ArrayList<>();
@@ -56,6 +59,8 @@ public class UserStatsActivity extends AppCompatActivity {
     private SimpleCourseAdapter courseAdapterPurchased;
     private int ratingsMean = 0;
     private int ratingsTotal = 0;
+    private List<Course> allCourses = new ArrayList<>();
+    private int profitTotal = 0;
 
     private Map<String, List<String>> allHashtags = new HashMap<>();
 
@@ -71,6 +76,8 @@ public class UserStatsActivity extends AppCompatActivity {
         tv_ratings_posted = findViewById(R.id.tv_ratings_posted);
         tv_purchased_courses = findViewById(R.id.tv_purchased_courses);
         piechart_user_relevant_categories = findViewById(R.id.piechart_user_relevant_categories);
+        tv_total_profit = findViewById(R.id.tv_total_profit);
+        barchart_user_profit_per_course = findViewById(R.id.barchart_user_profit_per_course);
 
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Users")
                 .orderByChild("id").startAt(getIntent().getStringExtra("userId")).endAt(getIntent().getStringExtra("userId") + "\uf8ff");
@@ -80,7 +87,6 @@ public class UserStatsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     currentUser = snap.getValue(User.class);
-
 
                     mCoursesPublished = new ArrayList<>();
                     FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
@@ -121,7 +127,6 @@ public class UserStatsActivity extends AppCompatActivity {
                     });
 
                     //CURSURI CU BOOKMARK
-
 
                     mCoursesBookmarked = new ArrayList<>();
 
@@ -176,7 +181,7 @@ public class UserStatsActivity extends AppCompatActivity {
                                 ratingsTotal += 1;
 
                             }
-                            if(ratingsTotal > 0){
+                            if (ratingsTotal > 0) {
                                 ratingsMean /= ratingsTotal;
                                 String ratings = "Ratings given: " + ratingsTotal + " avg(" + ratingsMean + ")";
                                 tv_ratings_posted.setText(ratings);
@@ -188,7 +193,6 @@ public class UserStatsActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
-
 
                     //CURSURI CUMPARATE
 
@@ -224,8 +228,8 @@ public class UserStatsActivity extends AppCompatActivity {
                                     for (String key : allHashtags.keySet()) {
                                         int count = 0;
                                         for (String courseId : allHashtags.get(key)) {
-                                            for(String courseIdPurchased : accountCoursesPurchased){
-                                                if(courseId.equals(courseIdPurchased)){
+                                            for (String courseIdPurchased : accountCoursesPurchased) {
+                                                if (courseId.equals(courseIdPurchased)) {
                                                     count += 1;
                                                 }
                                             }
@@ -242,6 +246,7 @@ public class UserStatsActivity extends AppCompatActivity {
                                     piechart_user_relevant_categories.setDescription(desc);
                                     piechart_user_relevant_categories.animateY(500);
                                 }
+
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                 }
@@ -253,6 +258,8 @@ public class UserStatsActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    //CURSURI CUMPARATE
 
                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference().child("Courses");
                     reference2.addValueEventListener(new ValueEventListener() {
@@ -274,6 +281,113 @@ public class UserStatsActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+
+                    //PROFIT TOTAL CURSURI PUBLICATE
+
+                    FirebaseDatabase.getInstance().getReference().child("Courses").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                allCourses.add(snap.getValue(Course.class));
+                            }
+
+                            Map<String, Float> coursesTotalSalesEach = new HashMap<>();
+                            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Purchases");
+                            dbref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Map<String, Float> coursesTotalSalesEach = new HashMap<>();
+                                    DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Purchases");
+                                    dbref.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                                for (DataSnapshot snap1 : snap.child("Purchased").getChildren()) {
+                                                    Course searchedCourse = new Course();
+                                                    for (Course c : allCourses) {
+                                                        if (c.getCourseId().equals(snap1.getKey())) {
+                                                            searchedCourse = c;
+                                                        }
+                                                    }
+
+                                                    if (coursesTotalSalesEach.get(snap1.getKey()) == null) {
+                                                        coursesTotalSalesEach.put(snap1.getKey(), Float.valueOf(searchedCourse.getPrice()).floatValue());
+                                                    } else {
+                                                        float previousValue = coursesTotalSalesEach.get(snap1.getKey());
+                                                        coursesTotalSalesEach.put(snap1.getKey(), previousValue + Float.valueOf(searchedCourse.getPrice()).floatValue());
+                                                    }
+
+                                                }
+                                            }
+
+                                            //AICI SUNT TOATE RESURSELE INCARCATE.............................................
+
+                                            System.out.println(coursesTotalSalesEach);
+
+
+                                            //BARCHART PROFIT PER CURS
+                                            List<BarEntry> entries2 = new ArrayList();
+                                            float poz = 0;
+                                            for (String key : coursesTotalSalesEach.keySet()) {
+                                                float f = coursesTotalSalesEach.get(key);
+                                                String result = null;
+                                                for (Course c : allCourses) {
+                                                    for( String key1 : accountCoursesPublished){
+                                                        if (c.getCourseId().equals(key) && c.getCourseId().equals(key1)) {
+                                                            result = c.getTitle();
+                                                        }
+                                                    }
+
+                                                }
+                                                if(result != null){
+                                                    poz += 3;
+                                                    entries2.add(new BarEntry(poz, f, result));
+                                                }
+
+                                            }
+
+                                            BarDataSet bardataset = new BarDataSet(entries2, "Profit per course");
+                                            barchart_user_profit_per_course.animateY(500);
+                                            BarData data = new BarData(bardataset);
+                                            bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                                            Description desc1 = new Description();
+                                            desc1.setText("");
+                                            barchart_user_profit_per_course.setDescription(desc1);
+                                            barchart_user_profit_per_course.setData(data);
+
+                                            barchart_user_profit_per_course.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                                                @Override
+                                                public void onValueSelected(Entry e, Highlight h) {
+                                                    Toast.makeText(UserStatsActivity.this, e.getData().toString(), Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onNothingSelected() {
+
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
                 }

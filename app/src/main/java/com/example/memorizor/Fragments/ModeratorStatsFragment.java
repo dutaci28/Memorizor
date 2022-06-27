@@ -220,8 +220,11 @@ public class ModeratorStatsFragment extends Fragment {
                                                             result = c.getTitle();
                                                         }
                                                     }
-                                                    poz += 3;
-                                                    entries2.add(new BarEntry(poz, f, result));
+                                                    if(result != null){
+                                                        poz += 3;
+                                                        entries2.add(new BarEntry(poz, f, result));
+                                                    }
+
                                                 }
 
                                                 BarDataSet bardataset = new BarDataSet(entries2, "Individual profits");

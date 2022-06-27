@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Adapter.SimpleCourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.Model.Rating;
@@ -57,7 +58,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
     private List<Course> mCoursesPurchased = new ArrayList<>();
     private User currentUser;
     private List<String> mCourseKeys = new ArrayList<>();
-    private SimpleCourseAdapter courseAdapterPublished;
+    private CourseAdapter courseAdapterPublished;
     private SimpleCourseAdapter courseAdapterBookmarked;
     private SimpleCourseAdapter courseAdapterPurchased;
     private int ratingsMean = 0;
@@ -101,7 +102,7 @@ public class ModeratorUserDetailsActivity extends AppCompatActivity {
                     rv_courses_user_published.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
                     mCoursesPublished = new ArrayList<>();
-                    courseAdapterPublished = new SimpleCourseAdapter(getBaseContext(), mCoursesPublished, true);
+                    courseAdapterPublished = new CourseAdapter(getBaseContext(), mCoursesPublished, true);
                     rv_courses_user_published.setAdapter(courseAdapterPublished);
 
                     FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
