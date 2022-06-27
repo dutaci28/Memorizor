@@ -220,6 +220,7 @@ public class UserStatsActivity extends AppCompatActivity {
                                     }
 
                                     //PRIMUL PIECHART
+
                                     ArrayList<PieEntry> entries;
                                     PieDataSet pieDataSet;
                                     PieData pieData;
@@ -234,17 +235,25 @@ public class UserStatsActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-                                        entries.add(new PieEntry(count, key));
+                                        if (count != 0) {
+                                            entries.add(new PieEntry(count, key));
+                                        }
+
+                                    }
+                                    if(entries.isEmpty()){
+
+                                    } else {
+                                        System.out.println(entries.size());
+                                        pieDataSet = new PieDataSet(entries, "");
+                                        pieData = new PieData(pieDataSet);
+                                        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                                        piechart_user_relevant_categories.setData(pieData);
+                                        Description desc = new Description();
+                                        desc.setText("");
+                                        piechart_user_relevant_categories.setDescription(desc);
+                                        piechart_user_relevant_categories.animateY(500);
                                     }
 
-                                    pieDataSet = new PieDataSet(entries, "");
-                                    pieData = new PieData(pieDataSet);
-                                    pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                                    piechart_user_relevant_categories.setData(pieData);
-                                    Description desc = new Description();
-                                    desc.setText("");
-                                    piechart_user_relevant_categories.setDescription(desc);
-                                    piechart_user_relevant_categories.animateY(500);
                                 }
 
                                 @Override
@@ -325,7 +334,6 @@ public class UserStatsActivity extends AppCompatActivity {
                                             //AICI SUNT TOATE RESURSELE INCARCATE.............................................
 
                                             System.out.println(coursesTotalSalesEach);
-
 
                                             //BARCHART PROFIT PER CURS
                                             List<BarEntry> entries2 = new ArrayList();
