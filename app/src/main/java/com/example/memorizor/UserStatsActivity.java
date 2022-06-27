@@ -327,7 +327,6 @@ public class UserStatsActivity extends AppCompatActivity {
                                                         float previousValue = coursesTotalSalesEach.get(snap1.getKey());
                                                         coursesTotalSalesEach.put(snap1.getKey(), previousValue + Float.valueOf(searchedCourse.getPrice()).floatValue());
                                                     }
-
                                                 }
                                             }
 
@@ -352,30 +351,37 @@ public class UserStatsActivity extends AppCompatActivity {
                                                 if(result != null){
                                                     poz += 3;
                                                     entries2.add(new BarEntry(poz, f, result));
+                                                    profitTotal += f;
                                                 }
 
                                             }
 
-                                            BarDataSet bardataset = new BarDataSet(entries2, "Profit per course");
-                                            barchart_user_profit_per_course.animateY(500);
-                                            BarData data = new BarData(bardataset);
-                                            bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-                                            Description desc1 = new Description();
-                                            desc1.setText("");
-                                            barchart_user_profit_per_course.setDescription(desc1);
-                                            barchart_user_profit_per_course.setData(data);
+                                            if(entries2.isEmpty()){
 
-                                            barchart_user_profit_per_course.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                                                @Override
-                                                public void onValueSelected(Entry e, Highlight h) {
-                                                    Toast.makeText(UserStatsActivity.this, e.getData().toString(), Toast.LENGTH_SHORT).show();
-                                                }
+                                            } else {
+                                                tv_total_profit.setText("Total profit: $" + profitTotal);
+                                                BarDataSet bardataset = new BarDataSet(entries2, "Profit per course");
+                                                barchart_user_profit_per_course.animateY(500);
+                                                BarData data = new BarData(bardataset);
+                                                bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                                                Description desc1 = new Description();
+                                                desc1.setText("");
+                                                barchart_user_profit_per_course.setDescription(desc1);
+                                                barchart_user_profit_per_course.setData(data);
 
-                                                @Override
-                                                public void onNothingSelected() {
+                                                barchart_user_profit_per_course.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                                                    @Override
+                                                    public void onValueSelected(Entry e, Highlight h) {
+                                                        Toast.makeText(UserStatsActivity.this, e.getData().toString(), Toast.LENGTH_SHORT).show();
+                                                    }
 
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onNothingSelected() {
+
+                                                    }
+                                                });
+                                            }
+
                                         }
 
                                         @Override
