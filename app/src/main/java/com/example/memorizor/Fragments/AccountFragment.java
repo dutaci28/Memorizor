@@ -215,6 +215,7 @@ public class AccountFragment extends Fragment {
                     map.put("name", currentUser.getName());
                     map.put("email", currentUser.getEmail());
                     map.put("id", userId);
+                    map.put("permissions", "user");
                     map.put("profileImageUrl", imageUrl);
 
                     ref.setValue(map);

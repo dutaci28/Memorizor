@@ -60,10 +60,15 @@ public class RegisterTabFragment extends Fragment {
                 String txtName = name.getText().toString();
                 String txtEmail = email.getText().toString();
                 String txtPassword = password.getText().toString();
+
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
                 if (TextUtils.isEmpty(txtName) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)){
                     Toast.makeText(getContext(), "Empty credentials!", Toast.LENGTH_SHORT).show();
                 } else if (txtPassword.length() < 6){
                     Toast.makeText(getContext(), "Password too short!", Toast.LENGTH_SHORT).show();
+                } else if (!txtEmail.matches(emailPattern)) {
+                    Toast.makeText(getContext(), "Invalid email!", Toast.LENGTH_SHORT).show();
                 } else {
                     registerUser(txtName , txtEmail , txtPassword);
                 }

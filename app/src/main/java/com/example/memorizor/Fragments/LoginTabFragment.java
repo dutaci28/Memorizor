@@ -90,10 +90,9 @@ public class LoginTabFragment extends Fragment {
                             }
 
                             if(exists == false){
-                                Toast.makeText(getContext(), "User does not exist", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Incorrect credentials", Toast.LENGTH_SHORT).show();
                             } else {
                                 loginUser(txt_email , txt_password);
-
                             }
                         }
 

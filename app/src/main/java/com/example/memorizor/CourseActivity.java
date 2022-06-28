@@ -3,6 +3,8 @@ package com.example.memorizor;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +45,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -135,6 +138,7 @@ public class CourseActivity extends AppCompatActivity {
                         .fromView(content)
                         .setFileName("Diploma")
                         .setFolderNameOrPath("diploma_folder")
+                        .actionAfterPDFGeneration(PdfGenerator.ActionAfterPDFGeneration.SHARE)
                         .build(new PdfGeneratorListener() {
                             @Override
                             public void onFailure(FailureResponse failureResponse) {
@@ -162,6 +166,7 @@ public class CourseActivity extends AppCompatActivity {
                             public void onSuccess(SuccessResponse response) {
                                 super.onSuccess(response);
                                 System.out.println(response.getPath());
+
                                 /* If PDF is generated successfully then you will find SuccessResponse
                                  * which holds the PdfDocument,File and path (where generated pdf is stored)*/
 
@@ -281,8 +286,14 @@ public class CourseActivity extends AppCompatActivity {
                                 });
 
                                 finish();
-                                startActivity(new Intent(CourseActivity.this, MainActivity.class));
-                                finish();
+                                if(currentUser.getPermissions().equals("user")){
+                                    startActivity(new Intent(CourseActivity.this, MainActivity.class));
+                                    finish();
+                                } else if(currentUser.getPermissions().equals("moderator")){
+                                    startActivity(new Intent(CourseActivity.this, MainActivityModerator.class));
+                                    finish();
+                                }
+
 
                                 break;
 
