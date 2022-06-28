@@ -143,157 +143,190 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                if (et_password_reset.getText().toString().isEmpty()) {
+                                    Toast.makeText(AccountSettingsActivity.this, "You must enter your password before deleting your account.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    String password = et_password_reset.getText().toString();
 
-                                //CITIRE CURSURI PUBLICATE
-                                FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        mCourseKeys.clear();
-                                        for (DataSnapshot snap : snapshot.getChildren()) {
-                                            mCourseKeys.add(snap.getKey());
-                                        }
-
-                                        for (String key : mCourseKeys) {
-
-                                            //DELETE PENTRU UN CURS
-                                            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Courses");
-                                            Query query = dbref.child(key);
-
-                                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    AuthCredential credential = EmailAuthProvider
+                                            .getCredential(currentUser.getEmail(), password);
+                                    FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    dataSnapshot.getRef().removeValue();
-                                                }
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
+                                                        //CITIRE CURSURI PUBLICATE
+                                                        FirebaseDatabase.getInstance().getReference().child("Courses").orderByChild("publisher").startAt(currentUser.getId()).endAt(currentUser.getId() + "\uf8ff").addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                mCourseKeys.clear();
+                                                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                                                    mCourseKeys.add(snap.getKey());
+                                                                }
 
-                                            DatabaseReference dbref1 = FirebaseDatabase.getInstance().getReference().child("Videos");
-                                            Query query1 = dbref1.orderByChild("hostCourseId").startAt(key).endAt(key + "\uf8ff");
+                                                                for (String key : mCourseKeys) {
 
-                                            query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                                        snap.getRef().removeValue();
+                                                                    //DELETE PENTRU UN CURS
+                                                                    DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("Courses");
+                                                                    Query query = dbref.child(key);
+
+                                                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            dataSnapshot.getRef().removeValue();
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    DatabaseReference dbref1 = FirebaseDatabase.getInstance().getReference().child("Videos");
+                                                                    Query query1 = dbref1.orderByChild("hostCourseId").startAt(key).endAt(key + "\uf8ff");
+
+                                                                    query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                                                snap.getRef().removeValue();
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference().child("Ratings");
+                                                                    Query query2 = dbref2.orderByChild("courseId").startAt(key).endAt(key + "\uf8ff");
+
+                                                                    query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                                                snap.getRef().removeValue();
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    DatabaseReference dbref3 = FirebaseDatabase.getInstance().getReference().child("Bookmarks");
+                                                                    Query query3 = dbref3;
+
+                                                                    query3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                                                if (snap.child("Bookmarked").child(key).exists()) {
+                                                                                    snap.child("Bookmarked").child(key).getRef().removeValue();
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    DatabaseReference dbref4 = FirebaseDatabase.getInstance().getReference().child("Purchases");
+                                                                    Query query4 = dbref4;
+
+                                                                    query4.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                                                if (snap.child("Purchased").child(key).exists()) {
+                                                                                    snap.child("Purchased").child(key).getRef().removeValue();
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    DatabaseReference dbref5 = FirebaseDatabase.getInstance().getReference().child("Hashtags");
+                                                                    Query query5 = dbref5;
+
+                                                                    query5.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                                                                if (snap.child(key).exists()) {
+                                                                                    snap.child(key).getRef().removeValue();
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+
+                                                                    //System.out.println("Course" + key);
+
+                                                                }
+
+                                                                //DELETE PENTRU USER
+                                                                Query queryUser = FirebaseDatabase.getInstance().getReference().child("Users")
+                                                                        .orderByChild("id").startAt(getIntent().getStringExtra("userId")).endAt(getIntent().getStringExtra("userId") + "\uf8ff");
+
+                                                                queryUser.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for (DataSnapshot snap : snapshot.getChildren()) {
+
+                                                                            snap.getRef().removeValue();
+                                                                            //System.out.println("User" + snap.getRef().getKey());
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+                                                                //DELETE PT AUTH
+                                                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                FirebaseAuth.getInstance().getCurrentUser().delete()
+                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                                            }
+                                                                        });
+
+                                                                //REDIRECT INAPOI
+                                                                FirebaseAuth.getInstance().signOut();
+                                                                Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
+                                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                getBaseContext().startActivity(intent);
+                                                                finish();
+
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                            }
+                                                        });
+
+                                                    } else {
+                                                        Toast.makeText(AccountSettingsActivity.this, "Error reauthenticating.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
                                             });
 
-                                            DatabaseReference dbref2 = FirebaseDatabase.getInstance().getReference().child("Ratings");
-                                            Query query2 = dbref2.orderByChild("courseId").startAt(key).endAt(key + "\uf8ff");
 
-                                            query2.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                                        snap.getRef().removeValue();
-                                                    }
-                                                }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
 
-                                            DatabaseReference dbref3 = FirebaseDatabase.getInstance().getReference().child("Bookmarks");
-                                            Query query3 = dbref3;
-
-                                            query3.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                                        if (snap.child("Bookmarked").child(key).exists()) {
-                                                            snap.child("Bookmarked").child(key).getRef().removeValue();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
-
-                                            DatabaseReference dbref4 = FirebaseDatabase.getInstance().getReference().child("Purchases");
-                                            Query query4 = dbref4;
-
-                                            query4.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                                        if (snap.child("Purchased").child(key).exists()) {
-                                                            snap.child("Purchased").child(key).getRef().removeValue();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
-
-                                            DatabaseReference dbref5 = FirebaseDatabase.getInstance().getReference().child("Hashtags");
-                                            Query query5 = dbref5;
-
-                                            query5.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                                        if (snap.child(key).exists()) {
-                                                            snap.child(key).getRef().removeValue();
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
-
-                                            //System.out.println("Course" + key);
-
-                                        }
-
-                                        //DELETE PENTRU USER
-                                        Query queryUser = FirebaseDatabase.getInstance().getReference().child("Users")
-                                                .orderByChild("id").startAt(getIntent().getStringExtra("userId")).endAt(getIntent().getStringExtra("userId") + "\uf8ff");
-
-                                        queryUser.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                for (DataSnapshot snap : snapshot.getChildren()) {
-
-                                                    snap.getRef().removeValue();
-                                                    //System.out.println("User" + snap.getRef().getKey());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                        //REDIRECT INAPOI
-                                        FirebaseAuth.getInstance().signOut();
-                                        Intent intent = new Intent(AccountSettingsActivity.this, StartActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        getBaseContext().startActivity(intent);
-                                        finish();
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                    }
-                                });
-
+                                }
 
                                 break;
 
