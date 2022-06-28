@@ -19,6 +19,7 @@ import android.widget.EditText;
 import com.example.memorizor.Adapter.CourseAdapter;
 import com.example.memorizor.Model.Course;
 import com.example.memorizor.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,16 +28,19 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class SearchFragment extends Fragment {
 
     private RecyclerView rv_courses;
     private List<Course> mCourses;
     private CourseAdapter courseAdapter;
-
     private EditText et_search;
+    private FloatingActionButton fab_sort;
+    private boolean sortAscending = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class SearchFragment extends Fragment {
 
         rv_courses = view.findViewById(R.id.rv_courses);
         et_search = view.findViewById(R.id.et_search);
+        fab_sort = view.findViewById(R.id.fab_sort);
 
         mCourses = new ArrayList<>();
 
@@ -66,6 +71,30 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        fab_sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sortAscending) {
+                    List<Course> sortedCourses = new ArrayList<>();
+                    sortedCourses = mCourses.stream().sorted().collect(Collectors.toList());
+                    mCourses.clear();
+                    mCourses.addAll(sortedCourses);
+                    sortAscending = false;
+                    fab_sort.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    courseAdapter.notifyDataSetChanged();
+                } else {
+                    List<Course> sortedCourses = new ArrayList<>();
+                    sortedCourses = mCourses.stream().sorted().collect(Collectors.toList());
+                    sortedCourses.sort(Comparator.reverseOrder());
+                    mCourses.clear();
+                    mCourses.addAll(sortedCourses);
+                    sortAscending = true;
+                    fab_sort.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    courseAdapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -106,6 +135,10 @@ public class SearchFragment extends Fragment {
                     if(course.getTitle().toLowerCase().contains(s.toLowerCase()) || course.getDescription().toLowerCase().contains(s.toLowerCase())){
                         mCourses.add(course);
                     }
+                    List<Course> sortedCourses = new ArrayList<>();
+                    sortedCourses = mCourses.stream().sorted().collect(Collectors.toList());
+                    mCourses.clear();
+                    mCourses.addAll(sortedCourses);
                     courseAdapter.notifyDataSetChanged();
                 }
 

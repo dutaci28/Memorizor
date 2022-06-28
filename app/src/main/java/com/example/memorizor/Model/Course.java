@@ -1,6 +1,6 @@
 package com.example.memorizor.Model;
 
-public class Course {
+public class Course implements Comparable<Course>{
     private String courseId;
     private String description;
     private String imageUrl;
@@ -67,5 +67,16 @@ public class Course {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public int compareTo(Course o) {
+        if(Float.valueOf(this.getPrice()) > Float.valueOf(o.getPrice())){
+            return 1;
+        } else if (Float.valueOf(this.getPrice()).equals(Float.valueOf(o.getPrice()))){
+            return 0;
+        } else {
+            return -1;
+        }
     }
 }
