@@ -413,17 +413,14 @@ public class CourseActivity extends AppCompatActivity {
 
                 int finalRating = 0;
                 for (Rating r : ratings) {
-                    finalRating += r.getValue();
                     if (r.getUserId().equals(firebaseUser.getUid())) {
+                        finalRating += r.getValue();
                         rating_bar.setIsIndicator(true);
                         rated = true;
                     }
                 }
 
                 noRatings = ratings.size();
-                if (noRatings > 0) {
-                    finalRating /= noRatings;
-                }
                 tv_ratings_number_course.setText("(" + noRatings + " ratings)");
 
                 if (rated) {
@@ -434,6 +431,7 @@ public class CourseActivity extends AppCompatActivity {
                         public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                             if(fromUser){
                                 int ratingValue = (int) rating_bar.getRating();
+                                Toast.makeText(CourseActivity.this, "You rated " + ratingValue + " stars out of 5.", Toast.LENGTH_SHORT).show();
 
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
                                 String ratingId = ref.push().getKey();
