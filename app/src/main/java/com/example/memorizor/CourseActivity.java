@@ -432,18 +432,21 @@ public class CourseActivity extends AppCompatActivity {
                     rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                         @Override
                         public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                            int ratingValue = (int) rating_bar.getRating();
+                            if(fromUser){
+                                int ratingValue = (int) rating_bar.getRating();
 
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
-                            String ratingId = ref.push().getKey();
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put("courseId", courseId);
-                            map.put("ratingId", ratingId);
-                            map.put("userId", firebaseUser.getUid());
-                            map.put("value", ratingValue);
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+                                String ratingId = ref.push().getKey();
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("courseId", courseId);
+                                map.put("ratingId", ratingId);
+                                map.put("userId", firebaseUser.getUid());
+                                map.put("value", ratingValue);
 
-                            ref.child(ratingId).setValue(map);
-                            rating_bar.setIsIndicator(true);
+                                ref.child(ratingId).setValue(map);
+                                rating_bar.setIsIndicator(true);
+                            }
+
                         }
                     });
                 }

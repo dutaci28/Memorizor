@@ -320,12 +320,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                                                         Toast.makeText(AccountSettingsActivity.this, "Error reauthenticating.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
-
                                             });
-
-
-
-
                                 }
 
                                 break;
