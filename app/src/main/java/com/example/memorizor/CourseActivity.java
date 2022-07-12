@@ -1,6 +1,7 @@
 package com.example.memorizor;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ShareCompat;
@@ -136,7 +137,7 @@ public class CourseActivity extends AppCompatActivity {
                         .setContext(CourseActivity.this)
                         .fromViewSource()
                         .fromView(content)
-                        .setFileName("Diploma")
+                        .setFileName("Diploma " + currentUser.getName() + " " + course.getTitle())
                         .setFolderNameOrPath("diploma_folder")
                         .actionAfterPDFGeneration(PdfGenerator.ActionAfterPDFGeneration.SHARE)
                         .build(new PdfGeneratorListener() {
@@ -321,14 +322,32 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (btn_buy.getText().toString().equals("Buy Now")) {
-                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(false);
-                    tv_preview.setVisibility(View.GONE);
-                    iv_preview.setVisibility(View.GONE);
+                    Intent intent=new Intent(CourseActivity.this,PaymentActivity.class);
+                    startActivityForResult(intent, 2);
                 } else {
-                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
-                    btn_buy.setText("Buy Now");
-                    tv_preview.setVisibility(View.VISIBLE);
-                    iv_preview.setVisibility(View.VISIBLE);
+                    DialogInterface.OnClickListener dialogClickListener1 = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+
+                                    FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).removeValue();
+                                    btn_buy.setText("Buy Now");
+                                    tv_preview.setVisibility(View.VISIBLE);
+                                    iv_preview.setVisibility(View.VISIBLE);
+
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                    builder.setMessage("Do you want to refund the course?").setPositiveButton("Yes", dialogClickListener1)
+                            .setNegativeButton("No", dialogClickListener1).show();
+
                 }
             }
         });
@@ -351,7 +370,19 @@ public class CourseActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased").child(course.getCourseId()).setValue(false);
+            tv_preview.setVisibility(View.GONE);
+            iv_preview.setVisibility(View.GONE);
+
+        }
+    }
+
     private void readCourse() {
+
         Query query1 = FirebaseDatabase.getInstance().getReference().child("Courses")
                 .orderByChild("courseId").startAt(courseId).endAt(courseId + "\uf8ff");
 
@@ -370,6 +401,7 @@ public class CourseActivity extends AppCompatActivity {
                         tv_preview.setVisibility(View.GONE);
                         iv_preview.setVisibility(View.GONE);
                         btn_bookmark.setVisibility(View.GONE);
+                        btn_generate_diploma.setVisibility(View.GONE);
                         btn_delete.setVisibility(View.VISIBLE);
                     } else {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Purchases").child(firebaseUser.getUid()).child("Purchased");
@@ -384,9 +416,12 @@ public class CourseActivity extends AppCompatActivity {
                                     } else {
 //                                        btn_buy.setText("Buy Now");
                                         btn_buy.setVisibility(View.GONE);
-                                        tv_preview.setVisibility(View.VISIBLE);
-                                        iv_preview.setVisibility(View.VISIBLE);
+                                        tv_preview.setVisibility(View.GONE);
+                                        iv_preview.setVisibility(View.GONE);
                                     }
+                                } else {
+                                    tv_preview.setVisibility(View.VISIBLE);
+                                    iv_preview.setVisibility(View.VISIBLE);
                                 }
                             }
 

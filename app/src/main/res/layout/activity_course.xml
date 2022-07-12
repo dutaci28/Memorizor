@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="750dp"
+    android:minHeight="600dp"
     tools:context=".CourseActivity">
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="750dp"
+        android:minHeight="600dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="750dp"
+            android:minHeight="600dp"
             >
 
             <androidx.cardview.widget.CardView
@@ -172,7 +172,7 @@
                 android:id="@+id/bottom_constraint_layout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:minHeight="300dp"
+                android:minHeight="200dp"
                 android:elevation="-10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -182,7 +182,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_videos"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="400dp"
 
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -192,9 +192,10 @@
                     android:id="@+id/btn_generate_diploma"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Generate diploma"
+                    android:text="Generate my diploma"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_bg"
                     app:layout_constraintTop_toBottomOf="@+id/rv_videos"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 

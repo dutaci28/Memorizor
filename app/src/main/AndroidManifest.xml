@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memorizor">
         <activity
+            android:name=".PaymentActivity"
+            android:exported="true" />
+        <activity
             android:name=".UserStatsActivity"
             android:exported="true" />
         <activity
@@ -47,7 +50,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
