@@ -82,7 +82,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         btn_modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(fullname.getText().toString()) || !TextUtils.isEmpty(email.getText().toString()) || et_password_reset.getText().toString().length() > 6) {
+                if (!TextUtils.isEmpty(fullname.getText().toString()) && !TextUtils.isEmpty(email.getText().toString()) && !TextUtils.isEmpty(et_password_reset.getText().toString())) {
                     String password = et_password_reset.getText().toString();
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -131,6 +131,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
                                 }
                             });
+                } else {
+                    Toast.makeText(AccountSettingsActivity.this, "Missing fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });

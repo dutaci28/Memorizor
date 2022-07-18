@@ -69,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/et_bg"
+                android:inputType="numberDecimal"
                 android:hint="$20.99"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
