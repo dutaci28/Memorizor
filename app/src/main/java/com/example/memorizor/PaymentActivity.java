@@ -52,6 +52,7 @@ public class PaymentActivity extends AppCompatActivity {
         btn_skip_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(PaymentActivity.this, "Payment skipped.", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
